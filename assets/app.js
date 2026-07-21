@@ -21,6 +21,7 @@
     loginEmail: '',
     loginError: '',
     acctMenu: false,            // top-bar account switcher open
+    mobileNav: false,           // off-canvas sidebar open (narrow viewports)
     ovPeriod: 14,                // overview period filter, in days
     periodMenu: false,          // overview period dropdown open
     exportMenu: false,          // overview export dropdown open
@@ -125,7 +126,8 @@
     user: '<circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/>',
     out: '<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"/><path d="M10 16l-4-4 4-4M6 12h9"/>',
     db: '<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.66 3.58 3 8 3s8-1.34 8-3V6"/><path d="M4 12c0 1.66 3.58 3 8 3s8-1.34 8-3"/>',
-    tree: '<rect x="3" y="3" width="6" height="5" rx="1"/><rect x="15" y="9.5" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M6 8v9a1 1 0 0 0 1 1h8M6 12h9"/>'
+    tree: '<rect x="3" y="3" width="6" height="5" rx="1"/><rect x="15" y="9.5" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M6 8v9a1 1 0 0 0 1 1h8M6 12h9"/>',
+    menu: '<path d="M3 6h18M3 12h18M3 18h18"/>'
   };
   function icon(name, cls) {
     return '<svg class="' + (cls || 'ic') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (PATHS[name] || '') + '</svg>';
@@ -336,7 +338,8 @@
     var me = '<div class="me">' + avatar(u.name, 'sm') +
       '<div class="t"><b>' + esc(u.name) + '</b><span>' + esc(roleLabel(u.group)) + '</span></div>' +
       '<span class="out" data-signout title="Sign out">' + icon('out') + '</span></div>';
-    return '<div class="side"><div class="logo">Tevus</div>' +
+    return '<div class="side' + (state.mobileNav ? ' open' : '') + '"><span class="menu-x" data-nav-close aria-label="Close menu">✕</span>' +
+      '<div class="logo">Tevus</div>' +
       '<div class="kicker">' + (isClientView() ? 'your workspace' : 'platform') + '</div>' +
       '<div class="nav" style="flex:1">' + items + '</div>' + me + '</div>';
   }
@@ -373,11 +376,14 @@
       left = '<div class="search">Search clients, personas, conversations…<span class="kbd">⌘K</span></div>' +
         '<div class="sync" data-sync><span class="dot' + (warn ? ' warn' : '') + '"></span>Synced ' + ago(s.last_sync_at) + '</div>';
     }
-    return '<div class="top">' + left + accountMenu() + '</div>';
+    var menuBtn = '<span class="menu-btn" data-menu-toggle role="button" aria-label="Open menu">' + icon('menu') + '</span>';
+    return '<div class="top">' + menuBtn + left + accountMenu() + '</div>';
   }
 
   function shell(active, content, cls) {
-    return '<div class="scr">' + sidebar(active) + '<div class="main">' + topbar() +
+    return '<div class="scr">' + sidebar(active) +
+      (state.mobileNav ? '<div class="nav-scrim" data-nav-close></div>' : '') +
+      '<div class="main">' + topbar() +
       '<div class="content' + (cls ? ' ' + cls : '') + '">' + content + '</div></div></div>' + overlays();
   }
   function ph(title, sub, right) {
@@ -1540,14 +1546,14 @@
     toast(msg);
   }
   function signOut() {
-    state.user = null; state.acctMenu = false; state.overlay = null; state.drawer = null;
+    state.user = null; state.acctMenu = false; state.overlay = null; state.drawer = null; state.mobileNav = false;
     state.demoPop = true; state.loginEmail = ''; state.loginError = '';
     go('#/login');
   }
 
   /* ---- Events ---------------------------------------------------------- */
   document.addEventListener('click', function (e) {
-    var t = e.target.closest('[data-nav],[data-signin],[data-switch],[data-signout],[data-demo-toggle],[data-acct-toggle],[data-open],[data-view],[data-close],[data-close-ov],[data-tab],[data-ptab],[data-rtab],[data-pfilter],[data-sort],[data-convclear],[data-report],[data-csv],[data-tsel],[data-topen],[data-texpand],[data-assign],[data-assign-toggle],[data-assign-commit],[data-unassign],[data-create-client],[data-sync],[data-topup],[data-topup-req],[data-stub],[data-period-toggle],[data-period],[data-export-toggle],[data-ovexport]');
+    var t = e.target.closest('[data-nav],[data-signin],[data-switch],[data-signout],[data-demo-toggle],[data-acct-toggle],[data-menu-toggle],[data-nav-close],[data-open],[data-view],[data-close],[data-close-ov],[data-tab],[data-ptab],[data-rtab],[data-pfilter],[data-sort],[data-convclear],[data-report],[data-csv],[data-tsel],[data-topen],[data-texpand],[data-assign],[data-assign-toggle],[data-assign-commit],[data-unassign],[data-create-client],[data-sync],[data-topup],[data-topup-req],[data-stub],[data-period-toggle],[data-period],[data-export-toggle],[data-ovexport]');
     if (state.acctMenu && !(t && (t.hasAttribute('data-switch') || t.hasAttribute('data-acct-toggle')))) { state.acctMenu = false; render(); }
     if (state.periodMenu && !(t && (t.hasAttribute('data-period') || t.hasAttribute('data-period-toggle')))) { state.periodMenu = false; render(); }
     if (state.exportMenu && !(t && (t.hasAttribute('data-ovexport') || t.hasAttribute('data-export-toggle')))) { state.exportMenu = false; render(); }
@@ -1564,6 +1570,8 @@
     if (t.hasAttribute('data-signout')) { signOut(); return; }
     if (t.hasAttribute('data-demo-toggle')) { state.demoPop = !state.demoPop; render(); return; }
     if (t.hasAttribute('data-acct-toggle')) { state.acctMenu = !state.acctMenu; render(); return; }
+    if (t.hasAttribute('data-menu-toggle')) { state.mobileNav = !state.mobileNav; render(); return; }
+    if (t.hasAttribute('data-nav-close')) { state.mobileNav = false; render(); return; }
     if (t.hasAttribute('data-period-toggle')) { state.periodMenu = !state.periodMenu; state.exportMenu = false; render(); return; }
     if (t.hasAttribute('data-period')) { state.ovPeriod = parseInt(t.getAttribute('data-period'), 10); state.periodMenu = false; render(); return; }
     if (t.hasAttribute('data-export-toggle')) { state.exportMenu = !state.exportMenu; state.periodMenu = false; render(); return; }
@@ -1573,7 +1581,7 @@
       return;
     }
 
-    if (t.hasAttribute('data-nav')) { e.preventDefault(); state.overlay = null; state.drawer = null; go(t.getAttribute('data-nav')); return; }
+    if (t.hasAttribute('data-nav')) { e.preventDefault(); state.overlay = null; state.drawer = null; state.mobileNav = false; go(t.getAttribute('data-nav')); return; }
     if (t.hasAttribute('data-open')) { state.overlay = t.getAttribute('data-open'); render(); return; }
     if (t.hasAttribute('data-view')) { state.drawer = { type: 'transcript', id: t.getAttribute('data-view') }; render(); return; }
     if (t.hasAttribute('data-sync')) { state.drawer = { type: 'sync' }; render(); return; }
@@ -1690,10 +1698,10 @@
 
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    if (state.overlay || state.drawer || state.acctMenu) { state.overlay = null; state.drawer = null; state.acctMenu = false; render(); }
+    if (state.overlay || state.drawer || state.acctMenu || state.mobileNav) { state.overlay = null; state.drawer = null; state.acctMenu = false; state.mobileNav = false; render(); }
   });
 
-  window.addEventListener('hashchange', function () { state.overlay = null; state.drawer = null; render(); });
+  window.addEventListener('hashchange', function () { state.overlay = null; state.drawer = null; state.mobileNav = false; render(); });
 
   rebuild();
   render();
