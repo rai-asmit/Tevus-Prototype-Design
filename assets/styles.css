@@ -429,7 +429,6 @@ input.inp:focus { outline: none; box-shadow: 0 0 0 3px var(--rule); }
    Card geometry is mirrored in app.js `ER` — change both together.
    ========================================================================= */
 .content.full { max-width: none; padding: 0; gap: 0; height: calc(100vh - 68px); }
-.erbar { padding: 18px 28px 16px; border-bottom: 2px solid var(--graphite); background: var(--paper); flex: none; }
 .erhint { font: 13px var(--font-mono); color: var(--muted); }
 
 .ercanvas {
@@ -594,6 +593,16 @@ input.inp:focus { outline: none; box-shadow: 0 0 0 3px var(--rule); }
   .pcards { grid-template-columns: 1fr; }
   .demo-pop { left: 14px; right: 14px; width: auto; bottom: 14px; }
   .demo-tab { left: 14px; bottom: 14px; }
+  /* the ER legend and zoom scraps are sized for a full sheet — scale them
+     down so they don't dominate a narrow canvas */
+  .erlegend, .erzoom { bottom: 10px; }
+  .erlegend { left: 10px; padding: 8px 10px; gap: 5px; font-size: 11.5px; }
+  .erlegend .k { width: 26px; }
+  .erleg-l { width: 26px; }
+  .erzoom { right: 10px; padding: 4px; }
+  .erz { width: 26px; height: 26px; font-size: 15px; }
+  .erz.wide { padding: 0 9px; font-size: 12px; }
+  .erpct { min-width: 40px; font-size: 11.5px; }
 }
 @media (max-width: 620px) {
   .erlegend { display: none; }

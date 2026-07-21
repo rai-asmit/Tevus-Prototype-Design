@@ -1227,10 +1227,7 @@
 
     // 'full' drops the content column's padding and width cap so the canvas
     // owns the whole viewport below the top bar.
-    var content = '<div class="erbar">' +
-      ph('Database') +
-      '</div>' + canvas;
-    return shell('#/database', content, 'full');
+    return shell('#/database', canvas, 'full');
   }
 
   /* ---- Canvas pan / zoom -----------------------------------------------
