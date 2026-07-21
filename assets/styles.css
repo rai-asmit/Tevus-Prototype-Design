@@ -438,7 +438,6 @@ input.inp:focus { outline: none; box-shadow: 0 0 0 3px var(--rule); }
 .ercanvas.grabbing { cursor: grabbing; }
 .erpan {
   position: absolute; top: 0; left: 0; transform-origin: 0 0; will-change: transform;
-  background-color: var(--paper); box-shadow: var(--shadow-sheet);
 }
 .erlines { position: absolute; top: 0; left: 0; pointer-events: none; filter: url(#rough); }
 .ere { fill: none; stroke: var(--graphite); stroke-width: 1.6; stroke-opacity: .55; }
