@@ -1,0 +1,237 @@
+{
+  "conv_0001": {
+    "conversation_id": "conv_0001",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi! I'm the Manish Corporation sales assistant. What can I help you with today?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "I'm looking at the Pro plan \u2014 what's included?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "The Pro plan includes unlimited seats, priority support, and advanced analytics.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "How does pricing scale for teams over 50?",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "For 50+ seats we move to volume pricing \u2014 I can put you in touch with our sales team.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0002": {
+    "conversation_id": "conv_0002",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Asmit Labs support here \u2014 how can I help?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "My dashboard isn't loading.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Let's try a hard refresh first. Are you on the latest browser version?",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "Just updated \u2014 it works now, thanks.",
+        "t": 36
+      }
+    ]
+  },
+  "conv_0003": {
+    "conversation_id": "conv_0003",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi, ask me anything about Manish Corporation products.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "What is the refund window?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Refunds are available within 30 days of purchase, no questions asked.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0004": {
+    "conversation_id": "conv_0004",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome to Mohan Workflows Pvt Ltd \u2014 how may I assist?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "I need to reschedule my appointment.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Of course. What date works best for you?",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "Next Tuesday afternoon.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Booked for Tuesday at 2:00 PM. You'll get a confirmation email shortly.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0005": {
+    "conversation_id": "conv_0005",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Asmit Labs support, back again.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "The fix worked earlier, but it's slow again.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Let me open a ticket and have an engineer look into the latency.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0006": {
+    "conversation_id": "conv_0006",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi! I'm the Manish Corporation sales assistant.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Do you offer a free trial?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Yes \u2014 a 14-day free trial with no card required.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0007": {
+    "conversation_id": "conv_0007",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome to Jay Marketing Agency \u2014 what are you shopping for today?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Looking for the new arc reactor charger.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Great choice. It's in aisle 3 \u2014 want me to check stock at your local store?",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0008": {
+    "conversation_id": "conv_0008",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Support Bot here.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "How do I export my data?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Head to Settings \u2192 Export and choose CSV or JSON.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0009": {
+    "conversation_id": "conv_0009",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi, I'm the Aman BugFree Solution triage assistant \u2014 what bug are you seeing?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "The export button throws a 500 on large reports.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Got it \u2014 logging that as high severity and routing to an engineer now.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0010": {
+    "conversation_id": "conv_0010",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome to the Arora Travels trip desk \u2014 how can I help?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "I need to move my flight to a day earlier.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Sure \u2014 checking fare rules on your booking now, one moment.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "Thanks, no rush.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Done \u2014 you're rebooked a day earlier, no change fee. Confirmation is on its way.",
+        "t": 48
+      }
+    ]
+  }
+}

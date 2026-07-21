@@ -1,0 +1,102 @@
+[
+  {
+    "id": "conv_0001",
+    "tavus_conversation_id": "cvs_0001x",
+    "persona_id": "per_sales",
+    "replica_id": "rep_ava",
+    "started_at": "2026-07-21T14:02:00Z",
+    "duration_seconds": 252,
+    "end_user_ref": "anon-0001",
+    "has_transcript": true
+  },
+  {
+    "id": "conv_0002",
+    "tavus_conversation_id": "cvs_0002x",
+    "persona_id": "per_support",
+    "replica_id": "rep_leo",
+    "started_at": "2026-07-21T13:47:00Z",
+    "duration_seconds": 123,
+    "end_user_ref": "anon-0002",
+    "has_transcript": true
+  },
+  {
+    "id": "conv_0003",
+    "tavus_conversation_id": "cvs_0003x",
+    "persona_id": "per_faq",
+    "replica_id": "rep_mia",
+    "started_at": "2026-07-21T12:30:00Z",
+    "duration_seconds": 400,
+    "end_user_ref": "anon-0003",
+    "has_transcript": true
+  },
+  {
+    "id": "conv_0004",
+    "tavus_conversation_id": "cvs_0004x",
+    "persona_id": "per_concierge",
+    "replica_id": "rep_noor",
+    "started_at": "2026-07-21T11:15:00Z",
+    "duration_seconds": 118,
+    "end_user_ref": "anon-0004",
+    "has_transcript": true
+  },
+  {
+    "id": "conv_0005",
+    "tavus_conversation_id": "cvs_0005x",
+    "persona_id": "per_support",
+    "replica_id": "rep_leo",
+    "started_at": "2026-07-20T17:44:00Z",
+    "duration_seconds": 201,
+    "end_user_ref": "anon-0005",
+    "has_transcript": true
+  },
+  {
+    "id": "conv_0006",
+    "tavus_conversation_id": "cvs_0006x",
+    "persona_id": "per_sales",
+    "replica_id": "rep_ava",
+    "started_at": "2026-07-20T16:05:00Z",
+    "duration_seconds": 175,
+    "end_user_ref": "anon-0006",
+    "has_transcript": true
+  },
+  {
+    "id": "conv_0007",
+    "tavus_conversation_id": "cvs_0007x",
+    "persona_id": "per_greeter",
+    "replica_id": "rep_zoe",
+    "started_at": "2026-07-20T10:22:00Z",
+    "duration_seconds": 96,
+    "end_user_ref": "anon-0007",
+    "has_transcript": true
+  },
+  {
+    "id": "conv_0008",
+    "tavus_conversation_id": "cvs_0008x",
+    "persona_id": "per_faq",
+    "replica_id": "rep_mia",
+    "started_at": "2026-07-19T09:41:00Z",
+    "duration_seconds": 188,
+    "end_user_ref": "anon-0008",
+    "has_transcript": true
+  },
+  {
+    "id": "conv_0009",
+    "tavus_conversation_id": "cvs_0009x",
+    "persona_id": "per_bugtriage",
+    "replica_id": "rep_kabir",
+    "started_at": "2026-07-21T15:10:00Z",
+    "duration_seconds": 145,
+    "end_user_ref": "anon-0009",
+    "has_transcript": true
+  },
+  {
+    "id": "conv_0010",
+    "tavus_conversation_id": "cvs_0010x",
+    "persona_id": "per_tripdesk",
+    "replica_id": "rep_diya",
+    "started_at": "2026-07-21T09:30:00Z",
+    "duration_seconds": 210,
+    "end_user_ref": "anon-0010",
+    "has_transcript": true
+  }
+]

@@ -1,0 +1,22 @@
+[
+  { "id": "led_ac1", "client_id": "cli_acme",     "date": "2026-07-01", "type": "initial", "amount": 5000,  "balance_after": 5000, "admin": "Manish C.", "note": "Initial allocation — 6-month term" },
+  { "id": "led_ac2", "client_id": "cli_acme",     "date": "2026-07-21", "type": "usage",   "amount": -3760, "balance_after": 1240, "admin": null,        "note": "Usage this period (all assigned personas)" },
+
+  { "id": "led_gx1", "client_id": "cli_globex",   "date": "2026-07-01", "type": "initial", "amount": 3000,  "balance_after": 3000, "admin": "Manish C.", "note": "Initial allocation — 3-month term" },
+  { "id": "led_gx2", "client_id": "cli_globex",   "date": "2026-07-15", "type": "topup",   "amount": 500,   "balance_after": 3500, "admin": "Asmit R.",   "note": "Mid-term top-up" },
+  { "id": "led_gx3", "client_id": "cli_globex",   "date": "2026-07-21", "type": "usage",   "amount": -1980, "balance_after": 1520, "admin": null,        "note": "Usage this period" },
+
+  { "id": "led_it1", "client_id": "cli_initech",  "date": "2026-06-01", "type": "initial", "amount": 1000,  "balance_after": 1000, "admin": "Manish C.", "note": "Initial allocation — account paused, no personas assigned yet" },
+
+  { "id": "led_um1", "client_id": "cli_umbrella", "date": "2026-07-01", "type": "initial", "amount": 2000,  "balance_after": 2000, "admin": "Manish C.", "note": "Initial allocation — 12-month term" },
+  { "id": "led_um2", "client_id": "cli_umbrella", "date": "2026-07-21", "type": "usage",   "amount": -410,  "balance_after": 1590, "admin": null,        "note": "Usage this period" },
+
+  { "id": "led_st1", "client_id": "cli_stark",    "date": "2026-07-10", "type": "initial", "amount": 2000,  "balance_after": 2000, "admin": "Manish C.", "note": "Initial allocation — 3-month term" },
+  { "id": "led_st2", "client_id": "cli_stark",    "date": "2026-07-21", "type": "usage",   "amount": -260,  "balance_after": 1740, "admin": null,        "note": "Usage this period" },
+
+  { "id": "led_am1", "client_id": "cli_aman",     "date": "2026-07-05", "type": "initial", "amount": 1500,  "balance_after": 1500, "admin": "Manish C.", "note": "Initial allocation — 3-month term" },
+  { "id": "led_am2", "client_id": "cli_aman",     "date": "2026-07-21", "type": "usage",   "amount": -640,  "balance_after": 860,  "admin": null,        "note": "Usage this period" },
+
+  { "id": "led_ar1", "client_id": "cli_arora",    "date": "2026-07-03", "type": "initial", "amount": 2500,  "balance_after": 2500, "admin": "Manish C.", "note": "Initial allocation — 6-month term" },
+  { "id": "led_ar2", "client_id": "cli_arora",    "date": "2026-07-21", "type": "usage",   "amount": -890,  "balance_after": 1610, "admin": null,        "note": "Usage this period" }
+]

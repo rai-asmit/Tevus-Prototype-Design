@@ -1,0 +1,103 @@
+[
+  {
+    "id": "per_sales",
+    "tavus_persona_id": "p_9x8y7z6",
+    "name": "Sales Assistant",
+    "client_id": "cli_acme",
+    "replica_id": "rep_ava",
+    "system_prompt": "You are Manish Corporation's friendly sales assistant. Help visitors compare plans and hand off to a human for 50+ seat deals.",
+    "context_tags": ["sales", "pricing", "plans"],
+    "created_at": "2026-07-01T09:20:00Z",
+    "last_synced_at": "2026-07-21T14:05:00Z"
+  },
+  {
+    "id": "per_faq",
+    "tavus_persona_id": "p_1a2b3c4",
+    "name": "FAQ Persona",
+    "client_id": "cli_acme",
+    "replica_id": "rep_mia",
+    "system_prompt": "Answer common Manish Corporation product questions: refunds, shipping, account help. Keep answers under three sentences.",
+    "context_tags": ["support", "faq"],
+    "created_at": "2026-07-02T10:00:00Z",
+    "last_synced_at": "2026-07-21T14:05:00Z"
+  },
+  {
+    "id": "per_support",
+    "tavus_persona_id": "p_5d6e7f8",
+    "name": "Support Bot",
+    "client_id": "cli_globex",
+    "replica_id": "rep_leo",
+    "system_prompt": "You are Asmit Labs technical support. Triage dashboard and login issues before escalating to a ticket.",
+    "context_tags": ["support", "technical"],
+    "created_at": "2026-07-01T09:40:00Z",
+    "last_synced_at": "2026-07-21T14:05:00Z"
+  },
+  {
+    "id": "per_concierge",
+    "tavus_persona_id": "p_j3k4l5m",
+    "name": "Concierge",
+    "client_id": "cli_umbrella",
+    "replica_id": "rep_noor",
+    "system_prompt": "You are the Mohan Workflows Pvt Ltd concierge. Help clients book, reschedule, and confirm appointments.",
+    "context_tags": ["booking", "concierge"],
+    "created_at": "2026-07-01T11:20:00Z",
+    "last_synced_at": "2026-07-21T14:05:00Z"
+  },
+  {
+    "id": "per_greeter",
+    "tavus_persona_id": "p_n6o7p8q",
+    "name": "Store Greeter",
+    "client_id": "cli_stark",
+    "replica_id": "rep_zoe",
+    "system_prompt": "Greet Jay Marketing Agency storefront visitors and route them to the right product specialist.",
+    "context_tags": ["retail", "greeter"],
+    "created_at": "2026-07-10T09:05:00Z",
+    "last_synced_at": "2026-07-21T14:05:00Z"
+  },
+  {
+    "id": "per_onboarding",
+    "tavus_persona_id": "p_r9s0t1u",
+    "name": "Onboarding Bot",
+    "client_id": null,
+    "replica_id": "rep_kai",
+    "system_prompt": "Walk new users through first-run setup.",
+    "context_tags": ["onboarding"],
+    "created_at": "2026-07-18T13:00:00Z",
+    "last_synced_at": "2026-07-21T14:05:00Z",
+    "_note": "client_id null = synced from Tavus but not yet assigned. Visible only in the internal Personas list (Req 4.5)."
+  },
+  {
+    "id": "per_demo",
+    "tavus_persona_id": "p_v2w3x4y",
+    "name": "Demo Persona",
+    "client_id": null,
+    "replica_id": null,
+    "system_prompt": "Generic demo persona used for internal testing.",
+    "context_tags": ["demo"],
+    "created_at": "2026-07-19T16:30:00Z",
+    "last_synced_at": "2026-07-21T14:05:00Z",
+    "_note": "Unassigned and no replica yet — demonstrates a freshly synced item awaiting provisioning."
+  },
+  {
+    "id": "per_bugtriage",
+    "tavus_persona_id": "p_a1b2c3d",
+    "name": "Bug Triage Assistant",
+    "client_id": "cli_aman",
+    "replica_id": "rep_kabir",
+    "system_prompt": "You are Aman BugFree Solution's triage assistant. Help users log bugs, check ticket status, and flag severity before handing off to an engineer.",
+    "context_tags": ["support", "qa", "triage"],
+    "created_at": "2026-07-05T09:20:00Z",
+    "last_synced_at": "2026-07-21T14:05:00Z"
+  },
+  {
+    "id": "per_tripdesk",
+    "tavus_persona_id": "p_e4f5g6h",
+    "name": "Trip Desk",
+    "client_id": "cli_arora",
+    "replica_id": "rep_diya",
+    "system_prompt": "You are the Arora Travels trip desk. Help travellers check itineraries, change bookings, and answer visa/luggage questions.",
+    "context_tags": ["travel", "booking", "support"],
+    "created_at": "2026-07-03T09:50:00Z",
+    "last_synced_at": "2026-07-21T14:05:00Z"
+  }
+]

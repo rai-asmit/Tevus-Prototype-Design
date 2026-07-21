@@ -1,0 +1,584 @@
+/* ============================================================================
+   Tevus prototype — PAPER WIREFRAME skin.
+
+   Same markup, same app.js, same data as ../prototype — only this file changes.
+   The rules are: one graphite pencil, one blue ruling pencil, one red pen for
+   margin notes. No brand colour, no product polish, nothing that suggests a
+   decision that hasn't been made yet. Fills are hatched, not coloured. Every
+   box is a square-cornered ruled rectangle — no radii, no tilt. The only
+   freehand mark left is the trend line inside a chart.
+
+   Section numbering mirrors the original stylesheet so the two can be diffed.
+   The custom-property NAMES are also unchanged — app.js sets a handful of inline
+   styles with var(--muted), var(--success-ink), var(--font-display) etc., so the
+   token vocabulary has to survive even though every value is remapped.
+   ========================================================================= */
+:root {
+  /* --- the pencil case ------------------------------------------------- */
+  --graphite: #2b2a26;          /* 2B pencil — all primary marks */
+  --graphite-soft: #4c4a44;     /* body text */
+  --pencil: #7a776e;            /* secondary / labels */
+  --pencil-light: #a5a196;      /* hints, placeholders */
+  --rule: #b9cadb;              /* the blue line printed on the paper */
+  --redpen: #b8544a;            /* margin annotations only */
+  --bluepen: #4d6f96;
+
+  /* --- the paper -------------------------------------------------------- */
+  --paper: #fcfaf4;             /* the sheet you draw on */
+  --paper-warm: #f6f2e7;        /* a second, slightly older sheet */
+  --paper-shade: #ece7d8;       /* pencil-shaded block */
+  --desk: #ddd8c9;              /* the desk the sheet lies on */
+
+  /* --- tokens carried over from the original stylesheet ------------------
+     app.js writes a few inline styles — var(--ink), var(--body), var(--muted),
+     var(--surface-soft), var(--on-dark-soft), var(--success-ink) and
+     var(--font-display) — so those names must keep resolving. The rest are the
+     handful the rules below still need; everything else the original defined
+     has no meaning on paper and is gone. */
+  --ink: var(--graphite); --body: var(--graphite-soft); --muted: var(--pencil); --muted-soft: var(--pencil-light);
+  --surface-soft: var(--paper-warm); --surface-dark: #33322c; --hairline: #c4bda9;
+  --primary-active: #171613; --on-primary: var(--paper); --on-dark: #faf7ee; --on-dark-soft: var(--pencil);
+  --success-ink: var(--graphite);   /* ledger credits — the "+" carries the meaning, not a colour */
+
+  /* --- radii: none. Every box is a ruled rectangle with square corners.
+     The four sizes are kept as one knob so a radius could be reintroduced in
+     a single place; --r-dot is the one exception, for genuinely round glyphs
+     (avatars, status dots, the logo mark) which are not box borders. */
+  --r-xs: 0; --r-sm: 0; --r-md: 0; --r-lg: 0;
+  --r-dot: 50%;
+
+  /* elevation — paper resting on paper, never "material" */
+  --shadow-xs: 1px 1px 0 rgba(43,42,38,.05);
+  --shadow-sm: 1px 2px 0 rgba(43,42,38,.06);
+  --shadow-md: 2px 3px 0 rgba(43,42,38,.07);
+  --shadow-lg: 3px 5px 0 rgba(43,42,38,.08), 0 14px 32px rgba(43,42,38,.13);
+  --shadow-pop: 2px 3px 0 rgba(43,42,38,.07), 0 14px 34px rgba(43,42,38,.16);
+  --shadow-drawer: -3px 0 0 rgba(43,42,38,.05), -18px 0 44px rgba(43,42,38,.14);
+  --shadow-sheet: 0 1px 0 rgba(43,42,38,.10), 0 18px 46px rgba(43,42,38,.16);
+
+  /* type — one hand, plus a typewriter for anything machine-generated */
+  --font-display: "Architects Daughter", "Comic Sans MS", cursive;
+  --font-body: "Kalam", "Architects Daughter", "Comic Sans MS", cursive;
+  --font-mono: "Cutive Mono", ui-monospace, "Courier New", monospace;
+
+  /* shading, used everywhere the original had a solid or tinted fill */
+  --hatch: repeating-linear-gradient(45deg, transparent 0 5px, rgba(43,42,38,.075) 5px 6px);
+  --hatch-strong: repeating-linear-gradient(45deg, transparent 0 4px, rgba(43,42,38,.13) 4px 5.5px);
+
+  --ease: cubic-bezier(.2,.7,.3,1); --dur: .16s; --dur-lg: .28s;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; font-family: var(--font-body);
+  color: var(--ink); font-size: 15px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  /* the desk: flat and warm */
+  background: var(--desk);
+}
+a { color: var(--ink); }
+::selection { background: rgba(185,202,219,.55); }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; margin: 0; }
+.sketch-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* display scale — hand fonts need open tracking, never the original -1.5px */
+.d-lg { font-family: var(--font-display); font-size: 46px; font-weight: 400; line-height: 1.1; letter-spacing: .5px; }
+.d-md { font-family: var(--font-display); font-size: 34px; font-weight: 400; line-height: 1.18; letter-spacing: .4px; }
+.d-sm { font-family: var(--font-display); font-size: 26px; font-weight: 400; line-height: 1.22; letter-spacing: .3px; }
+
+/* ============================================================================
+   1 · AUTH — split sheet. The left panel used to be the one dark surface; here
+   it is pencil-shaded, which is how a wireframe says "this block is filled".
+   ========================================================================= */
+.auth { min-height: 100vh; display: grid; grid-template-columns: 1.05fr 1fr; background: var(--paper); }
+
+.auth-aside {
+  position: relative; background-image: var(--hatch); background-color: var(--paper-warm);
+  color: var(--ink); border-right: 2px dashed var(--graphite);
+  padding: 48px; display: flex; flex-direction: column; gap: 26px; overflow: hidden;
+}
+.auth-aside::after { content: none; }
+.auth-aside .brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-size: 22px; letter-spacing: .4px; color: var(--ink); }
+.auth-aside .brand::before {
+  content: ""; width: 22px; height: 22px; border-radius: var(--r-dot); flex: none;
+  background: var(--paper); border: 2px solid var(--graphite);
+  box-shadow: inset 0 0 0 3px var(--paper), inset 0 0 0 5.5px var(--graphite);
+}
+.auth-aside .pitch { max-width: 470px; display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
+/* smaller than the original 38px: the hand font sets much taller */
+.auth-aside .pitch h1 { font-size: 32px; line-height: 1.28; letter-spacing: .3px; color: var(--ink); }
+.auth-aside .pitch p { margin: 0; color: var(--body); font-size: 16px; line-height: 1.65; }
+.auth-aside .foot { display: flex; gap: 22px; color: var(--muted); font-size: 13px; }
+.auth-aside .foot b { color: var(--ink); font-family: var(--font-display); font-size: 19px; font-weight: 400; letter-spacing: .2px; display: block; }
+
+/* the product fragment — a card sketched on top of the shaded block */
+.frag {
+  background: var(--paper); border: 2px solid var(--graphite); border-radius: var(--r-lg);
+  padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; max-width: 470px;
+  box-shadow: var(--shadow-md);
+}
+.frag .frow { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--muted); }
+.frag .frow b { color: var(--ink); font-family: var(--font-display); font-weight: 400; font-size: 16px; letter-spacing: .2px; }
+.frag .fbar { height: 11px; background: var(--paper); border: 1.5px solid var(--graphite); overflow: hidden; flex: 1; }
+.frag .fbar i { display: block; height: 100%; background-image: var(--hatch-strong); background-color: var(--paper-shade); }
+.frag .fnum { font-family: var(--font-display); font-size: 30px; letter-spacing: .3px; color: var(--ink); }
+.frag .fmini { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; border-top: 1.5px dashed var(--hairline); padding-top: 14px; }
+.frag .fmini div { font: 12px var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.frag .fmini span { display: block; font-family: var(--font-display); font-size: 20px; color: var(--ink); text-transform: none; letter-spacing: .2px; margin-top: 4px; }
+
+.auth-main { display: flex; align-items: center; justify-content: center; padding: 48px 40px; }
+.auth-form { width: 390px; max-width: 100%; display: flex; flex-direction: column; gap: 22px; }
+.auth-form .head h2 { font-size: 30px; letter-spacing: .4px; }
+.auth-form .head p { margin: 6px 0 0; color: var(--muted); font-size: 15px; }
+.auth-form form { display: flex; flex-direction: column; gap: 16px; }
+.auth-alt { display: flex; align-items: center; gap: 12px; color: var(--muted-soft); font-size: 13px; }
+.auth-alt::before, .auth-alt::after { content: ""; height: 0; border-top: 1.5px dashed var(--hairline); flex: 1; }
+.auth-err { display: flex; align-items: center; gap: 8px; padding: 10px 13px; border-radius: var(--r-md); background: var(--paper); border: 2px solid var(--redpen); color: var(--redpen); font-size: 14px; }
+.auth-foot { font-size: 13.5px; color: var(--muted); line-height: 1.7; }
+
+/* --- demo accounts popup (corner) — pinned to the sheet like a sticky note --- */
+.demo-pop {
+  position: fixed; right: 22px; bottom: 22px; width: 330px; z-index: 40;
+  background: var(--paper); border: 2px solid var(--graphite); border-radius: var(--r-lg);
+  box-shadow: var(--shadow-pop); animation: pop-in var(--dur-lg) var(--ease);
+}
+.demo-pop .dh { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-bottom: 1.5px solid var(--graphite); }
+.demo-pop .dh b { font-family: var(--font-display); font-weight: 400; font-size: 16px; letter-spacing: .2px; }
+.demo-pop .dh .x { margin-left: auto; width: 26px; height: 26px; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; color: var(--muted); cursor: pointer; font-size: 15px; line-height: 1; }
+.demo-pop .dh .x:hover { background: var(--paper-shade); color: var(--ink); }
+.demo-pop .dlist { max-height: min(340px, 40vh); overflow: auto; padding: 6px; }
+.demo-pop .dgrp { font: 12px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 10px 8px 5px; }
+.acct { width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px; border: 1.5px solid transparent; border-radius: var(--r-md); background: none; font: inherit; text-align: left; cursor: pointer; transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease); }
+.acct:hover { background: var(--paper-warm); border-color: var(--graphite); }
+.acct .t { min-width: 0; flex: 1; }
+.acct .t b { display: block; font-size: 14px; font-weight: 700; color: var(--ink); }
+.acct .t span { display: block; font-family: var(--font-mono); font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.acct .role { font-size: 12px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+.acct.pend .t b, .acct.pend .role { color: var(--muted-soft); }
+.demo-pop .dfoot { padding: 10px 14px; border-top: 1.5px dashed var(--hairline); font: 12px var(--font-mono); color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.demo-tab {
+  position: fixed; right: 22px; bottom: 22px; z-index: 40; height: 42px; padding: 0 18px;
+  display: inline-flex; align-items: center; gap: 8px; background: var(--paper); color: var(--ink);
+  border: 2px solid var(--graphite); border-radius: var(--r-md); font: 400 15px var(--font-body);
+  cursor: pointer; box-shadow: var(--shadow-md);
+}
+.demo-tab:hover { background: var(--paper-warm); }
+@keyframes pop-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+
+/* ============================================================================
+   2 · APP SHELL — .scr is one sheet of paper lying on the desk
+   ========================================================================= */
+.scr {
+  position: relative; width: 100%; max-width: 1560px; margin: 0 auto; min-height: 100vh;
+  display: grid; grid-template-columns: 252px 1fr; background: var(--paper);
+  /* the sheet's edge is drawn as a ring so it costs no layout width */
+  box-shadow: 0 0 0 2px var(--graphite), var(--shadow-sheet);
+}
+
+/* --- sidebar — pinned: the nav stays put, only the main column scrolls --- */
+.side { position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto; background: var(--paper-warm); border-right: 2px solid var(--graphite); padding: 18px 14px 14px; display: flex; flex-direction: column; gap: 4px; }
+.logo { display: flex; align-items: center; gap: 9px; font-family: var(--font-display); letter-spacing: .4px; font-size: 22px; padding: 4px 10px 14px; color: var(--ink); }
+.logo::before {
+  content: ""; width: 21px; height: 21px; border-radius: var(--r-dot); flex: none;
+  background: var(--paper); border: 2px solid var(--graphite);
+  box-shadow: inset 0 0 0 3px var(--paper), inset 0 0 0 5px var(--graphite);
+}
+.side .kicker { font: 12px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 8px 10px 6px; }
+.nav { display: flex; flex-direction: column; gap: 3px; }
+.nav a { display: flex; align-items: center; gap: 10px; padding: 8px 11px; color: var(--body); text-decoration: none; font-size: 15px; border-radius: var(--r-md); border: 1.5px solid transparent; cursor: pointer; transition: background var(--dur) var(--ease), color var(--dur) var(--ease); }
+.nav a:hover { color: var(--ink); background: rgba(43,42,38,.05); }
+.nav a.on { background: var(--paper); color: var(--ink); font-weight: 700; border-color: var(--graphite); box-shadow: var(--shadow-xs); }
+.nav a .ic { width: 17px; height: 17px; flex: none; opacity: .8; }
+.nav a.on .ic { opacity: 1; }
+.nav a .tail { margin-left: auto; font: 12px var(--font-mono); color: var(--muted); }
+.spx { flex: 1; }
+
+/* signed-in user card */
+.me { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: var(--r-md); border: 2px solid var(--graphite); background: var(--paper); box-shadow: var(--shadow-xs); }
+.me .t { min-width: 0; flex: 1; }
+.me .t b { display: block; font-size: 14px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.me .t span { display: block; font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.me .out { width: 28px; height: 28px; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; color: var(--muted); cursor: pointer; flex: none; }
+.me .out:hover { background: var(--paper-shade); color: var(--ink); }
+.me .out svg { width: 16px; height: 16px; }
+
+/* --- top bar --- */
+.main { display: flex; flex-direction: column; min-width: 0; }
+.top { height: 66px; background: var(--paper); border-bottom: 2px solid var(--graphite); display: flex; align-items: center; gap: 14px; padding: 0 28px; flex: none; position: sticky; top: 0; z-index: 6; }
+/* the hand font runs wider than Inter did — the placeholder must not wrap */
+.search { width: 340px; height: 40px; border: 1.5px solid var(--graphite); border-radius: var(--r-md); color: var(--muted-soft); display: flex; align-items: center; padding: 0 12px 0 38px; font-size: 14px; background: var(--paper); position: relative; white-space: nowrap; overflow: hidden; }
+.search::before { content: ""; position: absolute; left: 13px; width: 13px; height: 13px; border-radius: var(--r-dot); border: 1.8px solid var(--muted); box-shadow: 3.5px 3.5px 0 -1.4px var(--muted); transform: translateY(-1px); }
+.search .kbd { margin-left: auto; font: 12px var(--font-mono); color: var(--muted); border: 1.5px solid var(--hairline); border-radius: var(--r-xs); padding: 0 6px; }
+.sync { font-size: 14px; color: var(--body); display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 7px 13px; border-radius: var(--r-md); border: 1.5px solid var(--graphite); background: var(--paper); }
+.sync:hover { color: var(--ink); background: var(--paper-warm); }
+/* status dot: filled = healthy, hollow = needs a look. No traffic-light colours. */
+.dot { width: 9px; height: 9px; border-radius: var(--r-dot); background: var(--graphite); border: 1.5px solid var(--graphite); flex: none; }
+.dot.warn { background: var(--paper); }
+.ava { width: 38px; height: 38px; border-radius: var(--r-dot); background: var(--paper); border: 2px solid var(--graphite); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--ink); flex: none; }
+
+/* --- account switcher --- */
+.rolesw { margin-left: auto; position: relative; }
+.rolesw > .cur { display: flex; align-items: center; gap: 10px; height: 42px; padding: 0 12px 0 8px; border-radius: var(--r-md); background: var(--paper); cursor: pointer; }
+.rolesw > .cur:hover { background: var(--paper-warm); }
+.rolesw .who { display: flex; flex-direction: column; line-height: 1.3; text-align: left; }
+.rolesw .who b { font-size: 14px; font-weight: 700; }
+.rolesw .who span { font-size: 12px; color: var(--muted); }
+.rolesw .caret { color: var(--muted); font-size: 11px; }
+.rolesw .menu { position: absolute; top: 50px; right: 0; width: 310px; background: var(--paper); border: 2px solid var(--graphite); border-radius: var(--r-lg); box-shadow: var(--shadow-pop); padding: 6px; z-index: 8; animation: pop-in .18s var(--ease); max-height: 460px; overflow: auto; }
+.rolesw .menu .grp { font: 12px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 10px 10px 5px; }
+.rolesw .menu .acct.on { background-image: var(--hatch); background-color: var(--paper-warm); border-color: var(--graphite); }
+.rolesw .menu .mfoot { border-top: 1.5px dashed var(--hairline); margin-top: 6px; padding: 8px 8px 4px; }
+
+/* --- content column (the ruling behind it comes from .main) --- */
+.content { padding: 26px 32px 56px; display: flex; flex-direction: column; gap: 22px; max-width: 1280px; width: 100%; }
+.ph { display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap; }
+.ph h1 { font-size: 30px; letter-spacing: .4px; color: var(--ink); }
+.ph .sub { color: var(--muted); font-size: 14px; padding-bottom: 4px; }
+.ph .r { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+.ddown { position: relative; display: inline-flex; }
+.ddown .menu { position: absolute; top: 46px; right: 0; min-width: 200px; background: var(--paper); border: 2px solid var(--graphite); border-radius: var(--r-lg); box-shadow: var(--shadow-pop); padding: 6px; z-index: 8; animation: pop-in .18s var(--ease); }
+.ddown .menu button { width: 100%; display: block; padding: 9px 10px; border: none; border-radius: var(--r-md); background: none; font: inherit; font-size: 14px; text-align: left; color: var(--body); cursor: pointer; }
+.ddown .menu button:hover { background: var(--paper-warm); }
+.ddown .menu button.on { color: var(--ink); font-weight: 700; }
+.crumb { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); }
+.crumb a { color: var(--muted); text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 3px; cursor: pointer; }
+.crumb a:hover { color: var(--ink); }
+
+/* isolation / scope banner — reads like a note taped across the page */
+.scope-banner { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border: 2px dashed var(--graphite); background-image: var(--hatch); background-color: var(--paper-warm); border-radius: var(--r-md); font-size: 14px; color: var(--body); }
+.scope-banner b { color: var(--ink); font-weight: 700; }
+.scope-banner .tag { font: 12px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--paper); background: var(--graphite); padding: 2px 9px; flex: none; }
+
+/* ============================================================================
+   3 · CONTROLS
+   ========================================================================= */
+.btn, .btnp, .btng, .sel { height: 40px; padding: 0 16px; border-radius: var(--r-md); font-family: var(--font-body); font-size: 14.5px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; white-space: nowrap; cursor: pointer; transition: background var(--dur) var(--ease), color var(--dur) var(--ease), transform var(--dur) var(--ease); }
+.btn { border: 1.5px solid var(--graphite); background: var(--paper); color: var(--ink); box-shadow: var(--shadow-xs); }
+.btn:hover { background: var(--paper-warm); }
+/* the one solid fill in the system — a primary action is worth the ink */
+.btnp { border: 2px solid var(--graphite); background: var(--graphite); color: var(--on-primary); font-weight: 700; box-shadow: var(--shadow-sm); }
+.btnp:hover { background: var(--primary-active); }
+.btn:active, .btnp:active { transform: translate(1px, 1px); box-shadow: none; }
+.btn.block, .btnp.block { width: 100%; height: 46px; font-size: 16px; }
+.btng { height: auto; padding: 0 6px; color: var(--muted); background: transparent; border: none; }
+.btng:hover { color: var(--ink); }
+.btn.sm, .btnp.sm { height: 32px; padding: 0 12px; font-size: 13.5px; }
+.sel { border: 1.5px dashed var(--graphite); background: var(--paper); color: var(--body); }
+.sel:hover { background: var(--paper-warm); }
+.sel::after { content: "▾"; color: var(--muted); font-size: 11px; margin-left: 2px; }
+
+/* ============================================================================
+   4 · CARDS · STATS · METER
+   ========================================================================= */
+/* overflow:hidden keeps table headers inside the bowed corners */
+.card { background: var(--paper); border: 2px solid var(--graphite); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); overflow: hidden; }
+.card.soft { background-image: var(--hatch); background-color: var(--paper-warm); border-style: dashed; box-shadow: none; }
+.cardh { display: flex; align-items: center; padding: 13px 20px; border-bottom: 1.5px solid var(--graphite); font-family: var(--font-display); font-size: 17px; letter-spacing: .2px; gap: 8px; color: var(--ink); }
+.cardh .hsub { font-family: var(--font-body); font-size: 13.5px; color: var(--muted); letter-spacing: 0; }
+.cardh .r { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.cardp { padding: 18px 20px; }
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.stat { background: var(--paper); border: 2px solid var(--graphite); border-radius: var(--r-lg); padding: 16px 20px 20px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
+.stat .l { font: 12px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 7px; }
+.stat .l .ic { width: 15px; height: 15px; opacity: .7; }
+.stat .n { font-family: var(--font-display); font-size: 34px; letter-spacing: .3px; margin-top: 10px; color: var(--ink); line-height: 1.15; }
+.stat .n small { font-size: 15px; color: var(--muted); letter-spacing: 0; }
+.stat .s { font-size: 13.5px; color: var(--muted); margin-top: 9px; display: flex; align-items: center; gap: 8px; }
+.stat .s .btn { margin-left: auto; }
+.delta { display: inline-flex; align-items: center; gap: 3px; font-size: 13px; padding: 1px 9px; border: 1.5px solid var(--graphite); color: var(--ink); }
+.delta.up { background: var(--paper); }
+.delta.down { background-image: var(--hatch-strong); background-color: var(--paper-shade); }
+
+/* meters — hollow outline with pencil shading, never a filled progress bar */
+.meter { height: 12px; background: var(--paper); border: 1.5px solid var(--graphite); margin-top: 12px; overflow: hidden; }
+.meter i { display: block; height: 100%; background-image: var(--hatch-strong); background-color: var(--paper-shade); border-right: 1.5px solid var(--graphite); transition: width var(--dur-lg) var(--ease); }
+.meter.warn i { background-image: repeating-linear-gradient(-45deg, transparent 0 3px, rgba(184,84,74,.45) 3px 5.5px); background-color: var(--paper); }
+.meter.lg { height: 15px; }
+
+/* ============================================================================
+   5 · CHARTS — app.js emits the SVG with hard-coded #111 strokes and a gradient
+   fill. CSS beats presentation attributes, so the whole sketch treatment lands
+   here and the chart code stays byte-identical to the original prototype.
+   ========================================================================= */
+.chart-wrap { display: flex; flex-direction: column; }
+.chart { position: relative; background: var(--paper); border: 1.5px dashed var(--hairline); border-radius: var(--r-md); overflow: hidden; }
+.chart svg { display: block; width: 100%; height: 100%; filter: url(#rough); }
+.chart svg line { stroke: var(--rule) !important; stroke-dasharray: 5 5; }
+.chart svg path[stroke] { stroke: var(--graphite) !important; stroke-width: 2.4; }
+.chart svg path[fill^="url"], .chart svg path[fill="#111111"] { fill: url(#hatch); fill-opacity: 1; }
+.chart svg circle { fill: var(--graphite) !important; }
+.chart-y { position: absolute; top: 2px; left: 4px; font: 12px var(--font-mono); color: var(--muted); background: var(--paper); padding-right: 6px; }
+.axis { display: flex; justify-content: space-between; font: 12px var(--font-mono); color: var(--muted); margin-top: 9px; }
+.chart-legend { display: flex; align-items: center; gap: 14px; font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+.chart-legend .sw { width: 9px; height: 9px; background: var(--graphite); display: inline-block; margin-right: 6px; }
+
+/* horizontal bar rows */
+.hrow { display: grid; grid-template-columns: 132px 1fr 66px; align-items: center; gap: 12px; font-size: 14px; color: var(--body); }
+.hrow > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hrow .track { background: var(--paper); border: 1.5px solid var(--graphite); border-radius: var(--r-xs); height: 15px; overflow: hidden; }
+.hrow i { height: 100%; min-width: 3px; background-image: var(--hatch-strong); background-color: var(--paper-shade); border-right: 1.5px solid var(--graphite); display: block; transition: width var(--dur-lg) var(--ease); }
+.hrow .num { color: var(--ink); font-weight: 700; text-align: right; }
+
+/* ============================================================================
+   6 · TABLES — ruled like a paper ledger
+   ========================================================================= */
+.tbl { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.tbl th { text-align: left; font: 12px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 10px 20px; border-bottom: 1.5px solid var(--graphite); background-image: var(--hatch); background-color: var(--paper-warm); white-space: nowrap; }
+.tbl td { padding: 12px 20px; border-bottom: 1.5px dashed var(--hairline); color: var(--body); vertical-align: middle; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tbody tr:hover td, .tbl tr.rowlink:hover td { background: var(--paper-warm); }
+.tbl tr.rowlink { cursor: pointer; }
+.tbl tr.rowlink .chev { color: var(--muted); }
+.tbl tr.rowlink:hover .chev { color: var(--ink); }
+.tbl td b { color: var(--ink); font-weight: 700; }
+.tbl td .sub { display: block; font-size: 12.5px; color: var(--muted); margin-top: 1px; }
+.num { text-align: right; }
+.tbl th.num { text-align: right; }
+.cellpersona { display: flex; align-items: center; gap: 10px; }
+.empty { padding: 34px 20px; text-align: center; color: var(--muted); font-size: 14px; }
+.empty b { display: block; color: var(--ink); font-family: var(--font-display); font-weight: 400; font-size: 17px; letter-spacing: .2px; margin-bottom: 4px; }
+
+/* ============================================================================
+   7 · PILLS · TABS · FORMS — state is carried by stroke style, not by colour
+   ========================================================================= */
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 11px; font-size: 13px; line-height: 1.55; background: var(--paper); border: 1.5px solid var(--graphite); color: var(--ink); white-space: nowrap; }
+.pill.off { background-image: var(--hatch); background-color: var(--paper-warm); border-style: dashed; color: var(--muted); }
+.pill.pend { border-style: dashed; }
+.pill.info { border-color: var(--bluepen); color: var(--bluepen); }
+.pill.err { border-color: var(--redpen); color: var(--redpen); }
+.pill .gd { width: 7px; height: 7px; border-radius: var(--r-dot); background: currentColor; flex: none; }
+.pill.off .gd, .pill.pend .gd { background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }
+
+.tabs { display: inline-flex; gap: 4px; padding: 4px; background: var(--paper); border: 1.5px solid var(--graphite); border-radius: var(--r-md); align-self: flex-start; }
+.tabs a { padding: 6px 15px; font-size: 14.5px; color: var(--muted); text-decoration: none; border-radius: var(--r-sm); cursor: pointer; transition: background var(--dur) var(--ease), color var(--dur) var(--ease); }
+.tabs a:hover { color: var(--ink); }
+.tabs a.on { background-image: var(--hatch); background-color: var(--paper-warm); color: var(--ink); font-weight: 700; box-shadow: inset 0 0 0 1.5px var(--graphite); }
+
+.fld { display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 700; color: var(--ink); }
+.inp { height: 44px; width: 100%; border: 1.5px solid var(--graphite); border-radius: var(--r-md); background: var(--paper); padding: 0 14px; display: flex; align-items: center; color: var(--ink); font: 400 15px var(--font-body); transition: box-shadow var(--dur) var(--ease); }
+.inp::placeholder { color: var(--muted-soft); }
+input.inp:focus { outline: none; box-shadow: 0 0 0 3px var(--rule); }
+.inp.lock { background-image: var(--hatch); background-color: var(--paper-warm); border-style: dashed; color: var(--muted); }
+.hint { font-weight: 400; font-size: 13px; color: var(--muted-soft); }
+.ckrow { display: flex; align-items: center; gap: 12px; padding: 11px 13px; border: 1.5px solid var(--graphite); border-radius: var(--r-md); font-size: 14.5px; cursor: pointer; transition: background var(--dur) var(--ease); }
+.ckrow:hover { background: var(--paper-warm); }
+.ck { width: 20px; height: 20px; border: 2px solid var(--graphite); border-radius: var(--r-xs); flex: none; position: relative; background: var(--paper); }
+.ck.on::after { content: ""; position: absolute; left: 5px; top: 1px; width: 5px; height: 10px; border: solid var(--graphite); border-width: 0 2.5px 2.5px 0; transform: rotate(42deg); }
+
+/* ============================================================================
+   8 · OVERLAYS · DRAWER · TOAST
+   ========================================================================= */
+.ov { position: fixed; inset: 0; background: rgba(43,42,38,.34); display: flex; align-items: center; justify-content: center; z-index: 20; animation: ov-in var(--dur) var(--ease); padding: 20px; }
+.modal { width: 470px; max-width: 100%; background: var(--paper); border: 2px solid var(--graphite); border-radius: var(--r-lg); box-shadow: var(--shadow-lg); padding: 24px; display: flex; flex-direction: column; gap: 15px; animation: modal-in .22s var(--ease); max-height: 86vh; overflow: auto; }
+.modal h3 { font-size: 22px; letter-spacing: .3px; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 480px; max-width: calc(100vw - 32px); background: var(--paper); border-left: 2px solid var(--graphite); box-shadow: var(--shadow-drawer); padding: 22px 24px; display: flex; flex-direction: column; gap: 15px; z-index: 20; animation: drawer-in .24s var(--ease); }
+.drawer-head { display: flex; align-items: center; gap: 11px; }
+.drawer-head .x { margin-left: auto; width: 30px; height: 30px; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; color: var(--muted); cursor: pointer; font-size: 16px; }
+.drawer-head .x:hover { background: var(--paper-shade); color: var(--ink); }
+.hr { height: 0; border-top: 1.5px dashed var(--hairline); }
+.thread { display: flex; flex-direction: column; gap: 10px; overflow: auto; flex: 1; padding-right: 4px; }
+/* the two speakers are told apart by side + shading, not by a brand colour */
+.bub { max-width: 86%; padding: 10px 14px; font-size: 14.5px; line-height: 1.55; border: 1.5px solid var(--graphite); }
+.bub.persona { background: var(--paper); color: var(--body); align-self: flex-start; border-radius: var(--r-md); border-bottom-left-radius: 3px; }
+.bub.end_user { background-image: var(--hatch-strong); background-color: var(--paper-warm); color: var(--ink); align-self: flex-end; border-radius: var(--r-md); border-bottom-right-radius: 3px; }
+.mend { display: flex; justify-content: flex-end; gap: 8px; margin-top: 2px; }
+
+.toast { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) ; z-index: 60; background: var(--surface-dark); color: var(--on-dark); padding: 12px 20px; border: 2px solid var(--graphite); border-radius: var(--r-md); font-size: 14.5px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 10px; animation: pop-in .2s var(--ease); }
+.toast .gd { width: 8px; height: 8px; border-radius: var(--r-dot); background: var(--on-dark); flex: none; }
+
+@keyframes ov-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modal-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; } }
+@keyframes drawer-in { from { transform: translateX(24px); opacity: .4; } to { transform: none; opacity: 1; } }
+
+/* ============================================================================
+   9 · BITS · AVATARS · GRIDS
+   ========================================================================= */
+.note { font-size: 13px; color: var(--muted); font-family: var(--font-mono); line-height: 1.6; }
+/* requirement tags read as red-pen margin notes — the only colour in the system */
+.g2 { display: grid; grid-template-columns: 1.7fr 1fr; gap: 16px; align-items: start; }
+.g2.even { grid-template-columns: 1fr 1fr; }
+/* side-by-side cards that should read as one row: both take the taller height */
+.g2.eq { align-items: stretch; }
+.g3 { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 16px; }
+.pcards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.kv { display: grid; grid-template-columns: 152px 1fr; gap: 10px 16px; font-size: 14.5px; align-items: start; }
+.kv .k { color: var(--muted); }
+.kv .v { color: var(--ink); }
+.mono { font-family: var(--font-mono); font-size: 13px; }
+
+/* avatars — a wireframe never commits to a photo: outlined circle + initials */
+.av { width: 42px; height: 42px; border-radius: var(--r-dot); flex: none; display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-body); font-weight: 700; font-size: 14px; color: var(--ink); background: var(--paper); border: 2px solid var(--graphite); }
+.av.sm { width: 31px; height: 31px; font-size: 12px; border-width: 1.5px; }
+.av.lg { width: 48px; height: 48px; font-size: 16px; }
+.av-orange, .av-pink, .av-violet, .av-emerald, .av-blue, .av-amber { background-image: var(--hatch); background-color: var(--paper-warm); }
+.av-ink { background: var(--graphite); color: var(--paper); background-image: none; }
+
+/* icons get a light wobble so they don't read as finished vector artwork */
+/* icons keep their exact drawn geometry — no displacement wobble */
+
+/* ============================================================================
+   10 · DATABASE — the schema, sketched on graph paper. A full-bleed pan/zoom
+   sheet: tables are DOM boxes (text stays crisp at every zoom step) ruled over
+   one SVG layer of relationship lines, drawn freehand through #rough.
+   Card geometry is mirrored in app.js `ER` — change both together.
+   ========================================================================= */
+.content.full { max-width: none; padding: 0; gap: 0; height: calc(100vh - 68px); }
+.erbar { padding: 18px 28px 16px; border-bottom: 2px solid var(--graphite); background: var(--paper); flex: none; }
+.erhint { font: 13px var(--font-mono); color: var(--muted); }
+
+.ercanvas {
+  position: relative; flex: 1; min-height: 0; background: var(--desk);
+  overflow: hidden; cursor: grab; touch-action: none; user-select: none;
+}
+.ercanvas.grabbing { cursor: grabbing; }
+.erpan {
+  position: absolute; top: 0; left: 0; transform-origin: 0 0; will-change: transform;
+  background-color: var(--paper); box-shadow: var(--shadow-sheet);
+}
+.erlines { position: absolute; top: 0; left: 0; pointer-events: none; filter: url(#rough); }
+.ere { fill: none; stroke: var(--graphite); stroke-width: 1.6; stroke-opacity: .55; }
+.ere.on { stroke-opacity: 1; stroke-width: 2.4; }
+.ere.dim { stroke-opacity: .2; }
+
+/* --- table box: a ruled rectangle, like every other box on this sheet --- */
+.erc {
+  position: absolute; background: var(--paper); border: 2px solid var(--graphite);
+  box-shadow: var(--shadow-sm); overflow: hidden; cursor: pointer;
+  transition: box-shadow var(--dur) var(--ease), opacity var(--dur) var(--ease);
+}
+.erc:hover { box-shadow: var(--shadow-md); }
+.erc.rel { box-shadow: var(--shadow-md); }
+.erc.on { box-shadow: 3px 4px 0 var(--graphite); }
+.erc.dim { opacity: .38; }
+
+.erh { height: 48px; padding: 0 11px; display: flex; flex-direction: column; justify-content: center; gap: 1px;
+  border-bottom: 1.5px solid var(--graphite); }
+.erh b { font: 16px var(--font-display); letter-spacing: .2px; color: var(--ink); }
+.erh span { font: 11px var(--font-mono); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.erc.on .erh { background-image: var(--hatch-strong); background-color: var(--paper-shade); }
+
+.err { height: 26px; display: flex; align-items: center; gap: 6px; padding: 0 11px; font: 12.5px var(--font-mono); }
+.err b { font-weight: 400; color: var(--body); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.err.key b { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+.err i { margin-left: auto; padding-left: 6px; font-style: normal; font-size: 11px; color: var(--muted-soft); }
+.err .k { width: 34px; flex: none; display: flex; gap: 2px; }
+.err .k em { font: 9px var(--font-mono); font-style: normal; line-height: 14px; width: 16px; text-align: center; }
+.err .k .pk { background: var(--graphite); color: var(--paper); }
+.err .k .fk { border: 1.2px solid var(--graphite); color: var(--ink); line-height: 12px; }
+/* the caption a designer would pencil under the box */
+.erf { height: 30px; display: flex; align-items: center; padding: 0 11px; border-top: 1.5px dashed var(--hairline);
+  font: 11.5px var(--font-body); color: var(--redpen); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* --- floating controls: taped-on scraps of paper --- */
+.erlegend, .erzoom {
+  position: absolute; bottom: 16px; background: var(--paper);
+  border: 2px solid var(--graphite); box-shadow: var(--shadow-md); cursor: default;
+}
+.erlegend { left: 16px; padding: 11px 13px; display: flex; flex-direction: column; gap: 8px; font: 13px var(--font-body); color: var(--body); }
+.erlegend div { display: flex; align-items: center; gap: 9px; }
+.erlegend .k { width: 34px; flex: none; display: flex; }
+.erlegend .k em { font: 9px var(--font-mono); font-style: normal; line-height: 14px; width: 16px; text-align: center; }
+.erlegend .k .pk { background: var(--graphite); color: var(--paper); }
+.erlegend .k .fk { border: 1.2px solid var(--graphite); color: var(--ink); line-height: 12px; }
+.erlegend .k .q { font-size: 13px; color: var(--ink); text-align: left; }
+.erleg-l { width: 34px; flex: none; overflow: visible; }
+
+.erzoom { right: 16px; padding: 5px; display: flex; align-items: center; gap: 3px; }
+.erz { height: 30px; width: 30px; padding: 0; border: 1.5px solid transparent; background: none; color: var(--ink);
+  font: 18px var(--font-body); line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.erz:hover { border-color: var(--graphite); background-image: var(--hatch); background-color: var(--paper-warm); }
+.erz.wide { width: auto; padding: 0 12px; font-size: 14px; }
+.erpct { min-width: 52px; text-align: center; font: 13px var(--font-mono); color: var(--ink); }
+.ersep { width: 1.5px; height: 20px; background: var(--hairline); margin: 0 3px; }
+
+/* ============================================================================
+   11 · DRILL-DOWN — sortable/filterable tables, tab counters, and the Explorer
+   tree. Everything here is pencil-on-paper like the rest: no colour carries
+   meaning, state is shown with stroke weight, fill hatching and underlines.
+   ========================================================================= */
+.tabs a .tn { margin-left: 7px; font: 11px var(--font-mono); color: var(--muted); border: 1.2px solid var(--hairline); padding: 0 5px; }
+.tabs a.on .tn { color: var(--ink); border-color: var(--graphite); }
+.tscroll { max-height: 460px; overflow: auto; }
+.lnk { text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.lnk:hover { background-image: var(--hatch); }
+.keyref, .fkto { font: 11px var(--font-mono); color: var(--muted); }
+.fkto { margin-left: 6px; }
+.nullv { color: var(--muted-soft); font-style: italic; }
+.prompt { font: 14px var(--font-body); color: var(--body); line-height: 1.7; border-left: 2px dashed var(--hairline); padding-left: 14px; }
+
+/* --- sortable headers --- */
+.tbl th.sortable { cursor: pointer; user-select: none; }
+.tbl th.sortable:hover { background-image: var(--hatch-strong); }
+.tbl th.sortable.on { color: var(--ink); }
+.tbl th .sc { font-style: normal; font-size: 10px; margin-left: 5px; color: var(--muted-soft); }
+.tbl th.sortable.on .sc { color: var(--ink); }
+.tbl tr.rowlink.on td { background-image: var(--hatch); background-color: var(--paper-warm); }
+
+/* --- filter bar --- */
+.filterbar { display: flex; align-items: center; gap: 10px; padding: 12px 20px; border-bottom: 1.5px dashed var(--hairline); }
+.filterbar .fsearch { flex: 1; height: 36px; min-width: 0; }
+.filterbar .fcount { font: 12px var(--font-mono); color: var(--muted); white-space: nowrap; }
+
+/* --- explorer: tree beside the selected record --- */
+.explorer { display: grid; grid-template-columns: 1.25fr 1fr; gap: 16px; align-items: start; }
+.treecard .tree { max-height: 620px; overflow: auto; padding: 6px 0 10px; }
+.trow { display: flex; align-items: center; gap: 8px; padding: 5px 12px 5px 8px; cursor: pointer; border-left: 2px solid transparent; font-size: 14px; }
+.trow:hover { background: var(--paper-warm); }
+.trow.on { background-image: var(--hatch); background-color: var(--paper-warm); border-left-color: var(--graphite); }
+.trow .tw { width: 15px; flex: none; text-align: center; font-size: 10px; color: var(--muted); transition: transform var(--dur) var(--ease); }
+.trow .tw.open { transform: rotate(90deg); }
+.trow .tw.sp { visibility: hidden; }
+.trow .tk { width: 19px; height: 19px; flex: none; display: inline-flex; align-items: center; justify-content: center;
+  font: 11px var(--font-mono); border: 1.5px solid var(--graphite); background: var(--paper); }
+.trow .tk.k-persona, .cardh .tk.k-persona { background-image: var(--hatch); background-color: var(--paper-warm); }
+.trow .tk.k-replica, .cardh .tk.k-replica { border-style: dashed; }
+.trow .tk.k-conversation, .cardh .tk.k-conversation { border-radius: var(--r-dot); }
+.trow .tk.k-transcript, .cardh .tk.k-transcript { border-style: dotted; }
+.trow .tk.k-pool { border-style: dashed; color: var(--muted); }
+.trow .tl { color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.trow.pool .tl { color: var(--muted); }
+.trow .tm { font: 11.5px var(--font-mono); color: var(--muted); white-space: nowrap; }
+.trow .tkey { margin-left: auto; font: 11px var(--font-mono); color: var(--redpen); white-space: nowrap; padding-left: 10px; }
+.cardh .tk { margin-right: 2px; }
+
+/* --- record panel --- */
+.tbl.rec td { padding: 8px 20px; vertical-align: top; }
+.tbl.rec .fname { font: 12.5px var(--font-mono); color: var(--muted); white-space: nowrap; }
+.tbl.rec .fval { font-size: 12.5px; color: var(--ink); word-break: break-word; }
+.kb { font: 9px var(--font-mono); font-style: normal; line-height: 14px; padding: 0 4px; margin-left: 3px; }
+.kb.pk { background: var(--graphite); color: var(--paper); }
+.kb.fk { border: 1.2px solid var(--graphite); color: var(--ink); }
+
+/* ============================================================================
+   12 · QUALITY FLOOR · RESPONSIVE
+   ========================================================================= */
+:where(a, button, input, [tabindex]):focus-visible { outline: 2.5px solid var(--bluepen); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; } }
+
+@media (max-width: 1280px) {
+  .explorer { grid-template-columns: 1fr; }
+}
+@media (max-width: 1180px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .g2, .g3, .g2.even { grid-template-columns: 1fr; }
+  .pcards { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 980px) {
+  .scr { grid-template-columns: 1fr; }
+  .side { display: none; }
+  .content { padding: 20px 18px 44px; }
+  .search { display: none; }
+  .auth { grid-template-columns: 1fr; }
+  .auth-aside { display: none; }
+  .auth-main { align-items: flex-start; padding: 44px 20px 420px; }
+  .pcards { grid-template-columns: 1fr; }
+  .demo-pop { left: 14px; right: 14px; width: auto; bottom: 14px; }
+  .demo-tab { left: 14px; bottom: 14px; }
+}
+@media (max-width: 620px) {
+  .erlegend { display: none; }
+  .stats { grid-template-columns: 1fr; }
+  .ph .r { margin-left: 0; width: 100%; }
+}

@@ -1,0 +1,688 @@
+[
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_sales",
+    "date": "2026-07-08",
+    "conversations": 41,
+    "minutes": 159
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_sales",
+    "date": "2026-07-09",
+    "conversations": 27,
+    "minutes": 187
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_sales",
+    "date": "2026-07-10",
+    "conversations": 36,
+    "minutes": 264
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_sales",
+    "date": "2026-07-11",
+    "conversations": 52,
+    "minutes": 188
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_sales",
+    "date": "2026-07-12",
+    "conversations": 74,
+    "minutes": 205
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_sales",
+    "date": "2026-07-13",
+    "conversations": 57,
+    "minutes": 231
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_sales",
+    "date": "2026-07-14",
+    "conversations": 64,
+    "minutes": 152
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_sales",
+    "date": "2026-07-15",
+    "conversations": 45,
+    "minutes": 234
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_sales",
+    "date": "2026-07-16",
+    "conversations": 66,
+    "minutes": 271
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_sales",
+    "date": "2026-07-17",
+    "conversations": 57,
+    "minutes": 322
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_sales",
+    "date": "2026-07-18",
+    "conversations": 96,
+    "minutes": 154
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_sales",
+    "date": "2026-07-19",
+    "conversations": 67,
+    "minutes": 215
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_sales",
+    "date": "2026-07-20",
+    "conversations": 88,
+    "minutes": 163
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_sales",
+    "date": "2026-07-21",
+    "conversations": 50,
+    "minutes": 375
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_faq",
+    "date": "2026-07-08",
+    "conversations": 7,
+    "minutes": 47
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_faq",
+    "date": "2026-07-09",
+    "conversations": 16,
+    "minutes": 22
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_faq",
+    "date": "2026-07-10",
+    "conversations": 10,
+    "minutes": 19
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_faq",
+    "date": "2026-07-11",
+    "conversations": 16,
+    "minutes": 57
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_faq",
+    "date": "2026-07-12",
+    "conversations": 14,
+    "minutes": 27
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_faq",
+    "date": "2026-07-13",
+    "conversations": 16,
+    "minutes": 26
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_faq",
+    "date": "2026-07-14",
+    "conversations": 17,
+    "minutes": 50
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_faq",
+    "date": "2026-07-15",
+    "conversations": 20,
+    "minutes": 38
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_faq",
+    "date": "2026-07-16",
+    "conversations": 11,
+    "minutes": 65
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_faq",
+    "date": "2026-07-17",
+    "conversations": 9,
+    "minutes": 35
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_faq",
+    "date": "2026-07-18",
+    "conversations": 13,
+    "minutes": 73
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_faq",
+    "date": "2026-07-19",
+    "conversations": 21,
+    "minutes": 43
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_faq",
+    "date": "2026-07-20",
+    "conversations": 24,
+    "minutes": 59
+  },
+  {
+    "client_id": "cli_acme",
+    "persona_id": "per_faq",
+    "date": "2026-07-21",
+    "conversations": 16,
+    "minutes": 79
+  },
+  {
+    "client_id": "cli_globex",
+    "persona_id": "per_support",
+    "date": "2026-07-08",
+    "conversations": 42,
+    "minutes": 100
+  },
+  {
+    "client_id": "cli_globex",
+    "persona_id": "per_support",
+    "date": "2026-07-09",
+    "conversations": 22,
+    "minutes": 112
+  },
+  {
+    "client_id": "cli_globex",
+    "persona_id": "per_support",
+    "date": "2026-07-10",
+    "conversations": 25,
+    "minutes": 136
+  },
+  {
+    "client_id": "cli_globex",
+    "persona_id": "per_support",
+    "date": "2026-07-11",
+    "conversations": 48,
+    "minutes": 85
+  },
+  {
+    "client_id": "cli_globex",
+    "persona_id": "per_support",
+    "date": "2026-07-12",
+    "conversations": 20,
+    "minutes": 131
+  },
+  {
+    "client_id": "cli_globex",
+    "persona_id": "per_support",
+    "date": "2026-07-13",
+    "conversations": 21,
+    "minutes": 166
+  },
+  {
+    "client_id": "cli_globex",
+    "persona_id": "per_support",
+    "date": "2026-07-14",
+    "conversations": 47,
+    "minutes": 175
+  },
+  {
+    "client_id": "cli_globex",
+    "persona_id": "per_support",
+    "date": "2026-07-15",
+    "conversations": 29,
+    "minutes": 89
+  },
+  {
+    "client_id": "cli_globex",
+    "persona_id": "per_support",
+    "date": "2026-07-16",
+    "conversations": 37,
+    "minutes": 155
+  },
+  {
+    "client_id": "cli_globex",
+    "persona_id": "per_support",
+    "date": "2026-07-17",
+    "conversations": 38,
+    "minutes": 156
+  },
+  {
+    "client_id": "cli_globex",
+    "persona_id": "per_support",
+    "date": "2026-07-18",
+    "conversations": 58,
+    "minutes": 145
+  },
+  {
+    "client_id": "cli_globex",
+    "persona_id": "per_support",
+    "date": "2026-07-19",
+    "conversations": 31,
+    "minutes": 220
+  },
+  {
+    "client_id": "cli_globex",
+    "persona_id": "per_support",
+    "date": "2026-07-20",
+    "conversations": 64,
+    "minutes": 159
+  },
+  {
+    "client_id": "cli_globex",
+    "persona_id": "per_support",
+    "date": "2026-07-21",
+    "conversations": 58,
+    "minutes": 151
+  },
+  {
+    "client_id": "cli_umbrella",
+    "persona_id": "per_concierge",
+    "date": "2026-07-08",
+    "conversations": 6,
+    "minutes": 22
+  },
+  {
+    "client_id": "cli_umbrella",
+    "persona_id": "per_concierge",
+    "date": "2026-07-09",
+    "conversations": 4,
+    "minutes": 26
+  },
+  {
+    "client_id": "cli_umbrella",
+    "persona_id": "per_concierge",
+    "date": "2026-07-10",
+    "conversations": 6,
+    "minutes": 36
+  },
+  {
+    "client_id": "cli_umbrella",
+    "persona_id": "per_concierge",
+    "date": "2026-07-11",
+    "conversations": 5,
+    "minutes": 19
+  },
+  {
+    "client_id": "cli_umbrella",
+    "persona_id": "per_concierge",
+    "date": "2026-07-12",
+    "conversations": 7,
+    "minutes": 21
+  },
+  {
+    "client_id": "cli_umbrella",
+    "persona_id": "per_concierge",
+    "date": "2026-07-13",
+    "conversations": 8,
+    "minutes": 16
+  },
+  {
+    "client_id": "cli_umbrella",
+    "persona_id": "per_concierge",
+    "date": "2026-07-14",
+    "conversations": 8,
+    "minutes": 20
+  },
+  {
+    "client_id": "cli_umbrella",
+    "persona_id": "per_concierge",
+    "date": "2026-07-15",
+    "conversations": 7,
+    "minutes": 17
+  },
+  {
+    "client_id": "cli_umbrella",
+    "persona_id": "per_concierge",
+    "date": "2026-07-16",
+    "conversations": 10,
+    "minutes": 23
+  },
+  {
+    "client_id": "cli_umbrella",
+    "persona_id": "per_concierge",
+    "date": "2026-07-17",
+    "conversations": 7,
+    "minutes": 36
+  },
+  {
+    "client_id": "cli_umbrella",
+    "persona_id": "per_concierge",
+    "date": "2026-07-18",
+    "conversations": 7,
+    "minutes": 56
+  },
+  {
+    "client_id": "cli_umbrella",
+    "persona_id": "per_concierge",
+    "date": "2026-07-19",
+    "conversations": 4,
+    "minutes": 46
+  },
+  {
+    "client_id": "cli_umbrella",
+    "persona_id": "per_concierge",
+    "date": "2026-07-20",
+    "conversations": 11,
+    "minutes": 35
+  },
+  {
+    "client_id": "cli_umbrella",
+    "persona_id": "per_concierge",
+    "date": "2026-07-21",
+    "conversations": 6,
+    "minutes": 37
+  },
+  {
+    "client_id": "cli_stark",
+    "persona_id": "per_greeter",
+    "date": "2026-07-08",
+    "conversations": 2,
+    "minutes": 8
+  },
+  {
+    "client_id": "cli_stark",
+    "persona_id": "per_greeter",
+    "date": "2026-07-09",
+    "conversations": 3,
+    "minutes": 20
+  },
+  {
+    "client_id": "cli_stark",
+    "persona_id": "per_greeter",
+    "date": "2026-07-10",
+    "conversations": 4,
+    "minutes": 9
+  },
+  {
+    "client_id": "cli_stark",
+    "persona_id": "per_greeter",
+    "date": "2026-07-11",
+    "conversations": 3,
+    "minutes": 19
+  },
+  {
+    "client_id": "cli_stark",
+    "persona_id": "per_greeter",
+    "date": "2026-07-12",
+    "conversations": 4,
+    "minutes": 21
+  },
+  {
+    "client_id": "cli_stark",
+    "persona_id": "per_greeter",
+    "date": "2026-07-13",
+    "conversations": 5,
+    "minutes": 20
+  },
+  {
+    "client_id": "cli_stark",
+    "persona_id": "per_greeter",
+    "date": "2026-07-14",
+    "conversations": 6,
+    "minutes": 14
+  },
+  {
+    "client_id": "cli_stark",
+    "persona_id": "per_greeter",
+    "date": "2026-07-15",
+    "conversations": 6,
+    "minutes": 15
+  },
+  {
+    "client_id": "cli_stark",
+    "persona_id": "per_greeter",
+    "date": "2026-07-16",
+    "conversations": 5,
+    "minutes": 23
+  },
+  {
+    "client_id": "cli_stark",
+    "persona_id": "per_greeter",
+    "date": "2026-07-17",
+    "conversations": 6,
+    "minutes": 28
+  },
+  {
+    "client_id": "cli_stark",
+    "persona_id": "per_greeter",
+    "date": "2026-07-18",
+    "conversations": 6,
+    "minutes": 23
+  },
+  {
+    "client_id": "cli_stark",
+    "persona_id": "per_greeter",
+    "date": "2026-07-19",
+    "conversations": 7,
+    "minutes": 21
+  },
+  {
+    "client_id": "cli_stark",
+    "persona_id": "per_greeter",
+    "date": "2026-07-20",
+    "conversations": 6,
+    "minutes": 19
+  },
+  {
+    "client_id": "cli_stark",
+    "persona_id": "per_greeter",
+    "date": "2026-07-21",
+    "conversations": 7,
+    "minutes": 20
+  },
+  {
+    "client_id": "cli_aman",
+    "persona_id": "per_bugtriage",
+    "date": "2026-07-08",
+    "conversations": 17,
+    "minutes": 48
+  },
+  {
+    "client_id": "cli_aman",
+    "persona_id": "per_bugtriage",
+    "date": "2026-07-09",
+    "conversations": 17,
+    "minutes": 50
+  },
+  {
+    "client_id": "cli_aman",
+    "persona_id": "per_bugtriage",
+    "date": "2026-07-10",
+    "conversations": 11,
+    "minutes": 33
+  },
+  {
+    "client_id": "cli_aman",
+    "persona_id": "per_bugtriage",
+    "date": "2026-07-11",
+    "conversations": 13,
+    "minutes": 38
+  },
+  {
+    "client_id": "cli_aman",
+    "persona_id": "per_bugtriage",
+    "date": "2026-07-12",
+    "conversations": 16,
+    "minutes": 46
+  },
+  {
+    "client_id": "cli_aman",
+    "persona_id": "per_bugtriage",
+    "date": "2026-07-13",
+    "conversations": 17,
+    "minutes": 48
+  },
+  {
+    "client_id": "cli_aman",
+    "persona_id": "per_bugtriage",
+    "date": "2026-07-14",
+    "conversations": 11,
+    "minutes": 32
+  },
+  {
+    "client_id": "cli_aman",
+    "persona_id": "per_bugtriage",
+    "date": "2026-07-15",
+    "conversations": 22,
+    "minutes": 63
+  },
+  {
+    "client_id": "cli_aman",
+    "persona_id": "per_bugtriage",
+    "date": "2026-07-16",
+    "conversations": 18,
+    "minutes": 52
+  },
+  {
+    "client_id": "cli_aman",
+    "persona_id": "per_bugtriage",
+    "date": "2026-07-17",
+    "conversations": 15,
+    "minutes": 45
+  },
+  {
+    "client_id": "cli_aman",
+    "persona_id": "per_bugtriage",
+    "date": "2026-07-18",
+    "conversations": 14,
+    "minutes": 40
+  },
+  {
+    "client_id": "cli_aman",
+    "persona_id": "per_bugtriage",
+    "date": "2026-07-19",
+    "conversations": 20,
+    "minutes": 59
+  },
+  {
+    "client_id": "cli_aman",
+    "persona_id": "per_bugtriage",
+    "date": "2026-07-20",
+    "conversations": 19,
+    "minutes": 54
+  },
+  {
+    "client_id": "cli_aman",
+    "persona_id": "per_bugtriage",
+    "date": "2026-07-21",
+    "conversations": 11,
+    "minutes": 32
+  },
+  {
+    "client_id": "cli_arora",
+    "persona_id": "per_tripdesk",
+    "date": "2026-07-08",
+    "conversations": 22,
+    "minutes": 74
+  },
+  {
+    "client_id": "cli_arora",
+    "persona_id": "per_tripdesk",
+    "date": "2026-07-09",
+    "conversations": 20,
+    "minutes": 66
+  },
+  {
+    "client_id": "cli_arora",
+    "persona_id": "per_tripdesk",
+    "date": "2026-07-10",
+    "conversations": 25,
+    "minutes": 82
+  },
+  {
+    "client_id": "cli_arora",
+    "persona_id": "per_tripdesk",
+    "date": "2026-07-11",
+    "conversations": 19,
+    "minutes": 64
+  },
+  {
+    "client_id": "cli_arora",
+    "persona_id": "per_tripdesk",
+    "date": "2026-07-12",
+    "conversations": 13,
+    "minutes": 44
+  },
+  {
+    "client_id": "cli_arora",
+    "persona_id": "per_tripdesk",
+    "date": "2026-07-13",
+    "conversations": 25,
+    "minutes": 82
+  },
+  {
+    "client_id": "cli_arora",
+    "persona_id": "per_tripdesk",
+    "date": "2026-07-14",
+    "conversations": 15,
+    "minutes": 50
+  },
+  {
+    "client_id": "cli_arora",
+    "persona_id": "per_tripdesk",
+    "date": "2026-07-15",
+    "conversations": 12,
+    "minutes": 40
+  },
+  {
+    "client_id": "cli_arora",
+    "persona_id": "per_tripdesk",
+    "date": "2026-07-16",
+    "conversations": 18,
+    "minutes": 58
+  },
+  {
+    "client_id": "cli_arora",
+    "persona_id": "per_tripdesk",
+    "date": "2026-07-17",
+    "conversations": 16,
+    "minutes": 53
+  },
+  {
+    "client_id": "cli_arora",
+    "persona_id": "per_tripdesk",
+    "date": "2026-07-18",
+    "conversations": 23,
+    "minutes": 77
+  },
+  {
+    "client_id": "cli_arora",
+    "persona_id": "per_tripdesk",
+    "date": "2026-07-19",
+    "conversations": 25,
+    "minutes": 81
+  },
+  {
+    "client_id": "cli_arora",
+    "persona_id": "per_tripdesk",
+    "date": "2026-07-20",
+    "conversations": 13,
+    "minutes": 43
+  },
+  {
+    "client_id": "cli_arora",
+    "persona_id": "per_tripdesk",
+    "date": "2026-07-21",
+    "conversations": 23,
+    "minutes": 76
+  }
+]
