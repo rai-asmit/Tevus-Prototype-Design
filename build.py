@@ -18,7 +18,7 @@ OUT = os.path.join(ROOT, "assets", "db.js")
 db = {}
 for path in sorted(glob.glob(os.path.join(DATA, "*.json"))):
     key = os.path.splitext(os.path.basename(path))[0]
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         db[key] = json.load(f)
 
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
@@ -27,7 +27,7 @@ header = (
     "// Canonical source of truth is the JSON files under prototype/data/.\n"
     f"// Generated {datetime.datetime.now().isoformat(timespec='seconds')}\n"
 )
-with open(OUT, "w") as f:
+with open(OUT, "w", encoding="utf-8") as f:
     f.write(header)
     f.write("window.DB = ")
     json.dump(db, f, indent=2)

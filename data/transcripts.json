@@ -4,12 +4,42 @@
     "turns": [
       {
         "speaker": "persona",
+        "text": "Hello! Curious about Manish Corporation's plans?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Do you integrate with Salesforce?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Yes, native Salesforce sync is available on Pro and above.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "Great, that's the deciding factor for us.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Glad to hear it — want me to start the Pro trial for you now?",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0002": {
+    "conversation_id": "conv_0002",
+    "turns": [
+      {
+        "speaker": "persona",
         "text": "Hi! I'm the Manish Corporation sales assistant. What can I help you with today?",
         "t": 0
       },
       {
         "speaker": "end_user",
-        "text": "I'm looking at the Pro plan \u2014 what's included?",
+        "text": "I'm looking at the Pro plan — what's included?",
         "t": 12
       },
       {
@@ -24,38 +54,233 @@
       },
       {
         "speaker": "persona",
-        "text": "For 50+ seats we move to volume pricing \u2014 I can put you in touch with our sales team.",
+        "text": "For 50+ seats we move to volume pricing — I can put you in touch with our sales team.",
         "t": 48
-      }
-    ]
-  },
-  "conv_0002": {
-    "conversation_id": "conv_0002",
-    "turns": [
-      {
-        "speaker": "persona",
-        "text": "Asmit Labs support here \u2014 how can I help?",
-        "t": 0
-      },
-      {
-        "speaker": "end_user",
-        "text": "My dashboard isn't loading.",
-        "t": 12
-      },
-      {
-        "speaker": "persona",
-        "text": "Let's try a hard refresh first. Are you on the latest browser version?",
-        "t": 24
-      },
-      {
-        "speaker": "end_user",
-        "text": "Just updated \u2014 it works now, thanks.",
-        "t": 36
       }
     ]
   },
   "conv_0003": {
     "conversation_id": "conv_0003",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hello! Curious about Manish Corporation's plans?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Do you integrate with Salesforce?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Yes, native Salesforce sync is available on Pro and above.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "Great, that's the deciding factor for us.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Glad to hear it — want me to start the Pro trial for you now?",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0004": {
+    "conversation_id": "conv_0004",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi, thanks for stopping by — what brings you in today?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Just comparing you against a competitor, honestly.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Fair enough — happy to send a side-by-side comparison sheet if that helps.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "That would help, yes.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Sending it over now — look out for the pricing and SLA columns.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0005": {
+    "conversation_id": "conv_0005",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi! I'm the Manish Corporation sales assistant. What can I help you with today?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "I'm looking at the Pro plan — what's included?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "The Pro plan includes unlimited seats, priority support, and advanced analytics.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "How does pricing scale for teams over 50?",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "For 50+ seats we move to volume pricing — I can put you in touch with our sales team.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0006": {
+    "conversation_id": "conv_0006",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi! I'm the Manish Corporation sales assistant.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Do you offer a free trial?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Yes — a 14-day free trial with no card required.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0007": {
+    "conversation_id": "conv_0007",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hello! Curious about Manish Corporation's plans?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Do you integrate with Salesforce?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Yes, native Salesforce sync is available on Pro and above.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "Great, that's the deciding factor for us.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Glad to hear it — want me to start the Pro trial for you now?",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0008": {
+    "conversation_id": "conv_0008",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome back — still comparing plans, or ready to move forward?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "We decided on Pro. Can I get a quote for 12 seats?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Sure — 12 seats on Pro comes to $588/month billed annually.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "Can you email that quote to our finance team?",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Done — sent to the address on file, should land in a minute.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0009": {
+    "conversation_id": "conv_0009",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi! I'm the Manish Corporation sales assistant.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Do you offer a free trial?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Yes — a 14-day free trial with no card required.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0010": {
+    "conversation_id": "conv_0010",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Ask me anything about your account or order.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "My order shows delivered but I never got it.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Sorry about that — I've flagged it for a reshipment, no charge.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "Thank you, appreciate the quick fix.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Of course — you'll get tracking within 24 hours.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0011": {
+    "conversation_id": "conv_0011",
     "turns": [
       {
         "speaker": "persona",
@@ -74,12 +299,407 @@
       }
     ]
   },
-  "conv_0004": {
-    "conversation_id": "conv_0004",
+  "conv_0012": {
+    "conversation_id": "conv_0012",
     "turns": [
       {
         "speaker": "persona",
-        "text": "Welcome to Mohan Workflows Pvt Ltd \u2014 how may I assist?",
+        "text": "Hello, happy to answer any product questions.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Do you offer student discounts?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Yes — 40% off with a verified .edu email, applied at checkout.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "How do I verify?",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "You'll get a verification link by email right after signup.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0013": {
+    "conversation_id": "conv_0013",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi, ask me anything about Manish Corporation products.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "What is the refund window?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Refunds are available within 30 days of purchase, no questions asked.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0014": {
+    "conversation_id": "conv_0014",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi, ask me anything about Manish Corporation products.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "What is the refund window?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Refunds are available within 30 days of purchase, no questions asked.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0015": {
+    "conversation_id": "conv_0015",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi, ask me anything about Manish Corporation products.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "What is the refund window?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Refunds are available within 30 days of purchase, no questions asked.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0016": {
+    "conversation_id": "conv_0016",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi! I'm the Manish Corporation FAQ assistant.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Where do I find my invoice history?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Invoices live under Billing → History, downloadable as PDF.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0017": {
+    "conversation_id": "conv_0017",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi, ask me anything about Manish Corporation products.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "What is the refund window?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Refunds are available within 30 days of purchase, no questions asked.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0018": {
+    "conversation_id": "conv_0018",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hello, happy to answer any product questions.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Do you offer student discounts?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Yes — 40% off with a verified .edu email, applied at checkout.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "How do I verify?",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "You'll get a verification link by email right after signup.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0019": {
+    "conversation_id": "conv_0019",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Support Bot here.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "How do I export my data?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Head to Settings → Export and choose CSV or JSON.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0020": {
+    "conversation_id": "conv_0020",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Asmit Labs support, back again.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "The fix worked earlier, but it's slow again.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Let me open a ticket and have an engineer look into the latency.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0021": {
+    "conversation_id": "conv_0021",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Asmit Labs support — what's going on?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "API calls are returning 429s all morning.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "That's a rate-limit — checking your plan's quota now.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "We upgraded last week, should be higher.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Confirmed, the upgrade hadn't propagated — fixed, should clear within a few minutes.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0022": {
+    "conversation_id": "conv_0022",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Asmit Labs support — what's going on?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "API calls are returning 429s all morning.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "That's a rate-limit — checking your plan's quota now.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "We upgraded last week, should be higher.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Confirmed, the upgrade hadn't propagated — fixed, should clear within a few minutes.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0023": {
+    "conversation_id": "conv_0023",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Asmit Labs support — what's going on?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "API calls are returning 429s all morning.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "That's a rate-limit — checking your plan's quota now.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "We upgraded last week, should be higher.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Confirmed, the upgrade hadn't propagated — fixed, should clear within a few minutes.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0024": {
+    "conversation_id": "conv_0024",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Asmit Labs support — what's going on?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "API calls are returning 429s all morning.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "That's a rate-limit — checking your plan's quota now.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "We upgraded last week, should be higher.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Confirmed, the upgrade hadn't propagated — fixed, should clear within a few minutes.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0025": {
+    "conversation_id": "conv_0025",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Asmit Labs support here — how can I help?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "My dashboard isn't loading.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Let's try a hard refresh first. Are you on the latest browser version?",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "Just updated — it works now, thanks.",
+        "t": 36
+      }
+    ]
+  },
+  "conv_0026": {
+    "conversation_id": "conv_0026",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Asmit Labs support — what's going on?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "API calls are returning 429s all morning.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "That's a rate-limit — checking your plan's quota now.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "We upgraded last week, should be higher.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Confirmed, the upgrade hadn't propagated — fixed, should clear within a few minutes.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0027": {
+    "conversation_id": "conv_0027",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Support Bot here.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "How do I export my data?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Head to Settings → Export and choose CSV or JSON.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0028": {
+    "conversation_id": "conv_0028",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome to Mohan Workflows Pvt Ltd — how may I assist?",
         "t": 0
       },
       {
@@ -104,52 +724,262 @@
       }
     ]
   },
-  "conv_0005": {
-    "conversation_id": "conv_0005",
+  "conv_0029": {
+    "conversation_id": "conv_0029",
     "turns": [
       {
         "speaker": "persona",
-        "text": "Asmit Labs support, back again.",
+        "text": "Welcome to Mohan Workflows Pvt Ltd — how may I assist?",
         "t": 0
       },
       {
         "speaker": "end_user",
-        "text": "The fix worked earlier, but it's slow again.",
+        "text": "I need to reschedule my appointment.",
         "t": 12
       },
       {
         "speaker": "persona",
-        "text": "Let me open a ticket and have an engineer look into the latency.",
+        "text": "Of course. What date works best for you?",
         "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "Next Tuesday afternoon.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Booked for Tuesday at 2:00 PM. You'll get a confirmation email shortly.",
+        "t": 48
       }
     ]
   },
-  "conv_0006": {
-    "conversation_id": "conv_0006",
+  "conv_0030": {
+    "conversation_id": "conv_0030",
     "turns": [
       {
         "speaker": "persona",
-        "text": "Hi! I'm the Manish Corporation sales assistant.",
+        "text": "Hello, how can I help with your booking today?",
         "t": 0
       },
       {
         "speaker": "end_user",
-        "text": "Do you offer a free trial?",
+        "text": "Can I add a second attendee to my session?",
         "t": 12
       },
       {
         "speaker": "persona",
-        "text": "Yes \u2014 a 14-day free trial with no card required.",
+        "text": "Yes — I've added a guest seat, no extra charge for a party of two.",
         "t": 24
       }
     ]
   },
-  "conv_0007": {
-    "conversation_id": "conv_0007",
+  "conv_0031": {
+    "conversation_id": "conv_0031",
     "turns": [
       {
         "speaker": "persona",
-        "text": "Welcome to Jay Marketing Agency \u2014 what are you shopping for today?",
+        "text": "Welcome back — checking in on your upcoming appointment?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Actually I need to cancel it entirely.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Done — cancelled, and since it's more than 24 hours out there's no fee.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0032": {
+    "conversation_id": "conv_0032",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hello, how can I help with your booking today?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Can I add a second attendee to my session?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Yes — I've added a guest seat, no extra charge for a party of two.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0033": {
+    "conversation_id": "conv_0033",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome to Mohan Workflows Pvt Ltd — how may I assist?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "I need to reschedule my appointment.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Of course. What date works best for you?",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "Next Tuesday afternoon.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Booked for Tuesday at 2:00 PM. You'll get a confirmation email shortly.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0034": {
+    "conversation_id": "conv_0034",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome back — checking in on your upcoming appointment?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Actually I need to cancel it entirely.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Done — cancelled, and since it's more than 24 hours out there's no fee.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0035": {
+    "conversation_id": "conv_0035",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome to Mohan Workflows Pvt Ltd — how may I assist?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "I need to reschedule my appointment.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Of course. What date works best for you?",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "Next Tuesday afternoon.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Booked for Tuesday at 2:00 PM. You'll get a confirmation email shortly.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0036": {
+    "conversation_id": "conv_0036",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome back — checking in on your upcoming appointment?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Actually I need to cancel it entirely.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Done — cancelled, and since it's more than 24 hours out there's no fee.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0037": {
+    "conversation_id": "conv_0037",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome in — first time here?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Yes, is there a loyalty program?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "There is — sign up at checkout and today's purchase counts toward it.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0038": {
+    "conversation_id": "conv_0038",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome in — first time here?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Yes, is there a loyalty program?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "There is — sign up at checkout and today's purchase counts toward it.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0039": {
+    "conversation_id": "conv_0039",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome in — first time here?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Yes, is there a loyalty program?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "There is — sign up at checkout and today's purchase counts toward it.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0040": {
+    "conversation_id": "conv_0040",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome to Jay Marketing Agency — what are you shopping for today?",
         "t": 0
       },
       {
@@ -159,37 +989,147 @@
       },
       {
         "speaker": "persona",
-        "text": "Great choice. It's in aisle 3 \u2014 want me to check stock at your local store?",
+        "text": "Great choice. It's in aisle 3 — want me to check stock at your local store?",
         "t": 24
       }
     ]
   },
-  "conv_0008": {
-    "conversation_id": "conv_0008",
+  "conv_0041": {
+    "conversation_id": "conv_0041",
     "turns": [
       {
         "speaker": "persona",
-        "text": "Support Bot here.",
+        "text": "Welcome in — first time here?",
         "t": 0
       },
       {
         "speaker": "end_user",
-        "text": "How do I export my data?",
+        "text": "Yes, is there a loyalty program?",
         "t": 12
       },
       {
         "speaker": "persona",
-        "text": "Head to Settings \u2192 Export and choose CSV or JSON.",
+        "text": "There is — sign up at checkout and today's purchase counts toward it.",
         "t": 24
       }
     ]
   },
-  "conv_0009": {
-    "conversation_id": "conv_0009",
+  "conv_0042": {
+    "conversation_id": "conv_0042",
     "turns": [
       {
         "speaker": "persona",
-        "text": "Hi, I'm the Aman BugFree Solution triage assistant \u2014 what bug are you seeing?",
+        "text": "Welcome to Jay Marketing Agency — what are you shopping for today?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Looking for the new arc reactor charger.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Great choice. It's in aisle 3 — want me to check stock at your local store?",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0043": {
+    "conversation_id": "conv_0043",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome in — first time here?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Yes, is there a loyalty program?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "There is — sign up at checkout and today's purchase counts toward it.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0044": {
+    "conversation_id": "conv_0044",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome to Jay Marketing Agency — what are you shopping for today?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Looking for the new arc reactor charger.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Great choice. It's in aisle 3 — want me to check stock at your local store?",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0045": {
+    "conversation_id": "conv_0045",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi there, need help finding anything?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Where's the returns counter?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Right past the fitting rooms, on your left.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0046": {
+    "conversation_id": "conv_0046",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "What are you seeing — I'll get it logged.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Search results are out of order compared to last week.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Noted — flagging as a regression and pulling in the search team.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "It's blocking a demo tomorrow, can it be prioritized?",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Understood — marking urgent and pinging the on-call engineer now.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0047": {
+    "conversation_id": "conv_0047",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi, I'm the Aman BugFree Solution triage assistant — what bug are you seeing?",
         "t": 0
       },
       {
@@ -199,17 +1139,197 @@
       },
       {
         "speaker": "persona",
-        "text": "Got it \u2014 logging that as high severity and routing to an engineer now.",
+        "text": "Got it — logging that as high severity and routing to an engineer now.",
         "t": 24
       }
     ]
   },
-  "conv_0010": {
-    "conversation_id": "conv_0010",
+  "conv_0048": {
+    "conversation_id": "conv_0048",
     "turns": [
       {
         "speaker": "persona",
-        "text": "Welcome to the Arora Travels trip desk \u2014 how can I help?",
+        "text": "What are you seeing — I'll get it logged.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Search results are out of order compared to last week.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Noted — flagging as a regression and pulling in the search team.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "It's blocking a demo tomorrow, can it be prioritized?",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Understood — marking urgent and pinging the on-call engineer now.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0049": {
+    "conversation_id": "conv_0049",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "What are you seeing — I'll get it logged.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Search results are out of order compared to last week.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Noted — flagging as a regression and pulling in the search team.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "It's blocking a demo tomorrow, can it be prioritized?",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Understood — marking urgent and pinging the on-call engineer now.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0050": {
+    "conversation_id": "conv_0050",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "What are you seeing — I'll get it logged.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Search results are out of order compared to last week.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Noted — flagging as a regression and pulling in the search team.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "It's blocking a demo tomorrow, can it be prioritized?",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Understood — marking urgent and pinging the on-call engineer now.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0051": {
+    "conversation_id": "conv_0051",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Triage assistant here — describe the issue.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Dark mode toggle doesn't persist after refresh.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Logged as low severity — cosmetic, added to next sprint's backlog.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0052": {
+    "conversation_id": "conv_0052",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "What are you seeing — I'll get it logged.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Search results are out of order compared to last week.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Noted — flagging as a regression and pulling in the search team.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "It's blocking a demo tomorrow, can it be prioritized?",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Understood — marking urgent and pinging the on-call engineer now.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0053": {
+    "conversation_id": "conv_0053",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Triage assistant here — describe the issue.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Dark mode toggle doesn't persist after refresh.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Logged as low severity — cosmetic, added to next sprint's backlog.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0054": {
+    "conversation_id": "conv_0054",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Triage assistant here — describe the issue.",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Dark mode toggle doesn't persist after refresh.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Logged as low severity — cosmetic, added to next sprint's backlog.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0055": {
+    "conversation_id": "conv_0055",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome to the Arora Travels trip desk — how can I help?",
         "t": 0
       },
       {
@@ -219,7 +1339,7 @@
       },
       {
         "speaker": "persona",
-        "text": "Sure \u2014 checking fare rules on your booking now, one moment.",
+        "text": "Sure — checking fare rules on your booking now, one moment.",
         "t": 24
       },
       {
@@ -229,8 +1349,188 @@
       },
       {
         "speaker": "persona",
-        "text": "Done \u2014 you're rebooked a day earlier, no change fee. Confirmation is on its way.",
+        "text": "Done — you're rebooked a day earlier, no change fee. Confirmation is on its way.",
         "t": 48
+      }
+    ]
+  },
+  "conv_0056": {
+    "conversation_id": "conv_0056",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Trip desk — how can I help today?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "My checked bag allowance — is it one or two bags?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Your fare class includes two checked bags, up to 23kg each.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0057": {
+    "conversation_id": "conv_0057",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome to the Arora Travels trip desk — how can I help?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "I need to move my flight to a day earlier.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Sure — checking fare rules on your booking now, one moment.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "Thanks, no rush.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Done — you're rebooked a day earlier, no change fee. Confirmation is on its way.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0058": {
+    "conversation_id": "conv_0058",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi, trip desk here — got a booking question?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Do I need a visa for the Tokyo leg?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "For your passport, no visa is needed for stays under 90 days.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0059": {
+    "conversation_id": "conv_0059",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Welcome to the Arora Travels trip desk — how can I help?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "I need to move my flight to a day earlier.",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Sure — checking fare rules on your booking now, one moment.",
+        "t": 24
+      },
+      {
+        "speaker": "end_user",
+        "text": "Thanks, no rush.",
+        "t": 36
+      },
+      {
+        "speaker": "persona",
+        "text": "Done — you're rebooked a day earlier, no change fee. Confirmation is on its way.",
+        "t": 48
+      }
+    ]
+  },
+  "conv_0060": {
+    "conversation_id": "conv_0060",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi, trip desk here — got a booking question?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Do I need a visa for the Tokyo leg?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "For your passport, no visa is needed for stays under 90 days.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0061": {
+    "conversation_id": "conv_0061",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi, trip desk here — got a booking question?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Do I need a visa for the Tokyo leg?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "For your passport, no visa is needed for stays under 90 days.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0062": {
+    "conversation_id": "conv_0062",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Hi, trip desk here — got a booking question?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "Do I need a visa for the Tokyo leg?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "For your passport, no visa is needed for stays under 90 days.",
+        "t": 24
+      }
+    ]
+  },
+  "conv_0063": {
+    "conversation_id": "conv_0063",
+    "turns": [
+      {
+        "speaker": "persona",
+        "text": "Trip desk — how can I help today?",
+        "t": 0
+      },
+      {
+        "speaker": "end_user",
+        "text": "My checked bag allowance — is it one or two bags?",
+        "t": 12
+      },
+      {
+        "speaker": "persona",
+        "text": "Your fare class includes two checked bags, up to 23kg each.",
+        "t": 24
       }
     ]
   }

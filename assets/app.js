@@ -24,6 +24,10 @@
     mobileNav: false,           // off-canvas sidebar open (narrow viewports)
     ovPeriod: 14,                // overview period filter, in days
     periodMenu: false,          // overview period dropdown open
+    clientStatusFilter: 'all',  // Clients page status dropdown
+    clientStatusMenu: false,
+    userRoleFilter: 'all',      // Users page role dropdown
+    userRoleMenu: false,
     exportMenu: false,          // overview export dropdown open
     demoPop: true,              // corner demo-accounts popup open
     overlay: null,              // 'new-client' | 'assign'
@@ -104,6 +108,16 @@
   function fmtDateTime(iso) { var d = new Date(iso); var h = d.getUTCHours(), m = d.getUTCMinutes(); return MON[d.getUTCMonth()] + ' ' + d.getUTCDate() + ', ' + (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m; }
   function fmtDur(sec) { var m = Math.floor(sec / 60), s = sec % 60; return m + 'm ' + (s < 10 ? '0' : '') + s + 's'; }
   function ago(iso) { var mins = Math.round((Date.parse(NOW) - Date.parse(iso)) / 60000); if (mins < 1) return 'just now'; if (mins < 60) return mins + 'm ago'; var h = Math.round(mins / 60); if (h < 48) return h + 'h ago'; return Math.round(h / 24) + 'd ago'; }
+  var WD = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  function fmtTime(iso) { var d = new Date(iso); var h = d.getUTCHours(), m = d.getUTCMinutes(); return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m; }
+  function dayKey(iso) { var d = new Date(iso); return d.getUTCFullYear() + '-' + d.getUTCMonth() + '-' + d.getUTCDate(); }
+  function dayLabel(iso) {
+    var key = dayKey(iso), today = dayKey(NOW), yest = dayKey(new Date(Date.parse(NOW) - 86400000).toISOString());
+    var d = new Date(iso), wd = WD[d.getUTCDay()], full = fmtDate(iso);
+    if (key === today) return 'Today · ' + wd + ', ' + full;
+    if (key === yest) return 'Yesterday · ' + wd + ', ' + full;
+    return wd + ', ' + full;
+  }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
   var AV_TONES = ['av-orange', 'av-pink', 'av-violet', 'av-emerald', 'av-blue', 'av-amber'];
@@ -178,7 +192,7 @@
     if (!items.length) return '<div class="empty"><b>Nothing to chart yet</b>usage appears once conversations are synced</div>';
     var max = Math.max.apply(null, items.map(function (i) { return i.value; })) || 1;
     return items.map(function (i) {
-      return '<div class="hrow"><span>' + esc(i.label) + '</span><span class="track"><i style="width:' + Math.max(2, Math.round(i.value / max * 100)) + '%"></i></span><span class="num">' + nf(i.value) + '</span></div>';
+      return '<div class="hrow"><span title="' + esc(i.label) + '">' + esc(i.label) + '</span><span class="track"><i style="width:' + Math.max(2, Math.round(i.value / max * 100)) + '%"></i></span><span class="num">' + nf(i.value) + '</span></div>';
     }).join('');
   }
   function statusPill(s) {
@@ -305,7 +319,7 @@
     ['Overview', '#/overview', 'grid'], ['Clients', '#/clients', 'building'], ['Personas', '#/personas', 'persona'],
     ['Replicas', '#/replicas', 'replica'], ['Conversations', '#/conversations', 'chat'], ['Reports', '#/reports', 'doc'],
     ['Users', '#/users', 'users'], ['Explorer', '#/explorer', 'tree'], ['Database', '#/database', 'db'],
-    ['__spacer__'], ['Settings', '#/overview', 'gear']
+    ['__spacer__'], ['Settings', '#/settings', 'gear']
   ];
   var CLIENT_NAV = [
     ['Dashboard', '#/c/dashboard', 'chart'], ['Minutes', '#/c/minutes', 'clock'], ['Personas', '#/c/personas', 'persona'],
@@ -370,10 +384,10 @@
   function topbar() {
     var left;
     if (isClientView()) {
-      left = '<div class="search">Search your personas &amp; conversations…<span class="kbd">⌘K</span></div>';
+      left = '<div class="search" data-stub="Global search is a prototype stub — use the filter box on each table instead">Search your personas &amp; conversations…<span class="kbd">⌘K</span></div>';
     } else {
       var s = DB.sync_status, warn = s.status !== 'healthy';
-      left = '<div class="search">Search clients, personas, conversations…<span class="kbd">⌘K</span></div>' +
+      left = '<div class="search" data-stub="Global search is a prototype stub — use the filter box on each table instead">Search clients, personas, conversations…<span class="kbd">⌘K</span></div>' +
         '<div class="sync" data-sync><span class="dot' + (warn ? ' warn' : '') + '"></span>Synced ' + ago(s.last_sync_at) + '</div>';
     }
     var menuBtn = '<span class="menu-btn" data-menu-toggle role="button" aria-label="Open menu">' + icon('menu') + '</span>';
@@ -431,15 +445,23 @@
     var persona = IX.personasById[conv.persona_id], replica = persona && persona.replica_id ? IX.replicasById[persona.replica_id] : null;
     var client = persona && persona.client_id ? IX.clientsById[persona.client_id] : null;
     var tr = DB.transcripts[cid];
-    var lines = tr ? tr.turns.map(function (t) { return '<div class="bub ' + t.speaker + '">' + esc(t.text) + '</div>'; }).join('')
+    var lines = tr ? tr.turns.map(function (t) {
+      return '<div class="bub ' + t.speaker + '"><span class="bubt mono">' + fmtDur(t.t) + '</span>' + esc(t.text) + '</div>';
+    }).join('')
       : '<div class="empty"><b>No transcript stored</b>this session predates transcript capture</div>';
     return '<div class="drawer">' +
       '<div class="drawer-head">' + avatar(persona ? persona.name : '?') +
       '<div><b>' + esc(persona ? persona.name : '—') + '</b> · ' + esc(replica ? replica.name : '—') +
-      '<div class="note">' + esc(client ? client.name : 'Unassigned') + ' · ' + fmtDateTime(conv.started_at) + ' · ' + fmtDur(conv.duration_seconds) + '</div></div>' +
-      '<span class="x" data-close>✕</span></div><div class="hr"></div>' +
+      '<div class="note">' + esc(client ? client.name : 'Unassigned') + ' · ' + esc(conv.end_user_ref) + '</div></div>' +
+      '<span class="x" data-close>✕</span></div>' +
+      '<div class="metarow">' +
+        '<span class="mchip">' + icon('clock') + dayLabel(conv.started_at) + '</span>' +
+        '<span class="mchip mono">' + fmtTime(conv.started_at) + ' UTC</span>' +
+        '<span class="mchip">' + ago(conv.started_at) + '</span>' +
+        '<span class="mchip">' + fmtDur(conv.duration_seconds) + ' duration</span>' +
+      '</div><div class="hr"></div>' +
       '<div class="thread">' + lines + '</div>' +
-      '<div class="note">turn-by-turn transcript · read-only</div></div>';
+      '<div class="note">turn-by-turn transcript · timestamps are seconds into the call · read-only</div></div>';
   }
 
   function syncDrawer() {
@@ -568,6 +590,24 @@
     }).join('') + '</div>') : '';
     return '<div class="ddown"><span class="sel" data-period-toggle>Last ' + (state.ovPeriod || 14) + ' days</span>' + menu + '</div>';
   }
+  function statusFilterDropdown() {
+    var statuses = DB.clients.map(function (c) { return c.status; }).filter(function (s, i, a) { return a.indexOf(s) === i; });
+    var cur = state.clientStatusFilter;
+    var label = cur === 'all' ? 'All statuses' : cur.charAt(0).toUpperCase() + cur.slice(1);
+    var opt = function (v, l) { return '<button class="' + (cur === v ? 'on' : '') + '" data-csfilter="' + v + '">' + l + '</button>'; };
+    var menu = state.clientStatusMenu ? ('<div class="menu">' + opt('all', 'All statuses') +
+      statuses.map(function (s) { return opt(s, s.charAt(0).toUpperCase() + s.slice(1)); }).join('') + '</div>') : '';
+    return '<div class="ddown"><span class="sel" data-csfilter-toggle>' + label + '</span>' + menu + '</div>';
+  }
+  function roleFilterDropdown() {
+    var roles = DB.users.map(function (u) { return u.group; }).filter(function (r, i, a) { return a.indexOf(r) === i; });
+    var cur = state.userRoleFilter;
+    var label = cur === 'all' ? 'All roles' : roleLabel(cur);
+    var opt = function (v, l) { return '<button class="' + (cur === v ? 'on' : '') + '" data-urfilter="' + v + '">' + l + '</button>'; };
+    var menu = state.userRoleMenu ? ('<div class="menu">' + opt('all', 'All roles') +
+      roles.map(function (r) { return opt(r, roleLabel(r)); }).join('') + '</div>') : '';
+    return '<div class="ddown"><span class="sel" data-urfilter-toggle>' + label + '</span>' + menu + '</div>';
+  }
   function exportDropdown() {
     var menu = state.exportMenu ? (
       '<div class="menu">' +
@@ -667,16 +707,17 @@
   }
 
   function scrClients() {
-    var rows = DB.clients.map(function (c) {
+    var list = state.clientStatusFilter === 'all' ? DB.clients : DB.clients.filter(function (c) { return c.status === state.clientStatusFilter; });
+    var rows = list.map(function (c) {
       var b = IX.clientBudget[c.id], pct = clientPctUsed(c.id);
       return '<tr class="rowlink" data-nav="#/client/' + c.id + '"><td><div class="cellpersona">' + avatar(c.name, 'sm') +
         '<span><b>' + esc(c.name) + '</b><span class="sub">' + c.term.months + '-month term · to ' + fmtDate(c.term.end) + '</span></span></div></td>' +
         '<td>' + statusPill(c.status) + '</td><td class="num">' + IX.clientTotals[c.id].personas + '</td>' +
         '<td style="min-width:150px"><div class="meter" style="margin:0"><i style="width:' + pct + '%"></i></div><span class="sub">' + nf(b.used) + ' / ' + nf(b.allocated) + ' min · ' + pct + '%</span></td>' +
         '<td class="num"><b>' + nf(clientRemaining(c.id)) + '</b></td><td class="num chev">›</td></tr>';
-    }).join('');
+    }).join('') || emptyRow(6, 'No clients match this filter', 'try a different status');
     var right = (canProvision() ? '<span class="btnp" data-open="new-client">+ New client</span>' : '<span class="pill off"><span class="gd"></span>Read-only</span>');
-    var content = ph('Clients', DB.clients.length + ' organizations', '<span class="sel">All statuses</span>' + right) +
+    var content = ph('Clients', DB.clients.length + ' organizations', statusFilterDropdown() + right) +
       '<div class="card"><table class="tbl"><tr><th>Client</th><th>Status</th><th class="num">Personas</th><th>Minutes used</th><th class="num">Balance</th><th></th></tr>' + rows + '</table></div>';
     return shell('#/clients', content);
   }
@@ -792,7 +833,9 @@
 
     var body;
     if (state.personaTab === 'conversations') {
-      body = convCard(all, { of: 'this persona', cols: ['end_user', 'duration', 'turns'] });
+      body = '<div class="note">Showing ' + all.length + ' stored session' + (all.length === 1 ? '' : 's') + ' with full transcripts — not the same as the ' +
+        nf(t.convos) + ' conversations totalled on the Analytics tab, which reflects the whole synced period.</div>' +
+        convCard(all, { of: 'this persona', cols: ['end_user', 'duration', 'turns'] });
     } else if (state.personaTab === 'config') {
       body = '<div class="g2 eq">' +
         '<div class="card"><div class="cardh">Configuration<span class="hsub">synced from Tavus</span></div><div class="cardp kv">' +
@@ -843,11 +886,21 @@
       (want.duration ? sortTh('duration_seconds', 'Duration', 'num') : '') +
       (want.turns ? sortTh('turns', 'Turns', 'num') : '') +
       '<th class="num">Transcript</th>';
+    var colCount = 2 + (want.client ? 1 : 0) + (want.persona ? 1 : 0) + (want.replica ? 1 : 0) +
+      (want.end_user ? 1 : 0) + (want.duration ? 1 : 0) + (want.turns ? 1 : 0);
+    var groupByDay = state.convSort.key === 'started_at';
+    var lastDay = null;
     var body = rows.map(function (c) {
       var p = IX.personasById[c.persona_id], cl = clientOf(c), rp = c.replica_id ? IX.replicasById[c.replica_id] : null;
       var turns = DB.transcripts[c.id] ? DB.transcripts[c.id].turns.length : 0;
-      return '<tr class="rowlink" data-view="' + c.id + '">' +
-        '<td><b>' + fmtDateTime(c.started_at) + '</b><span class="sub mono">' + esc(c.tavus_conversation_id) + '</span></td>' +
+      var sep = '';
+      if (groupByDay) {
+        var key = dayKey(c.started_at);
+        if (key !== lastDay) { sep = '<tr class="daysep"><td colspan="' + colCount + '">' + dayLabel(c.started_at) + '</td></tr>'; lastDay = key; }
+      }
+      return sep + '<tr class="rowlink" data-view="' + c.id + '">' +
+        '<td><div class="convtime"><b>' + fmtTime(c.started_at) + '</b><span class="ago">' + ago(c.started_at) + '</span></div>' +
+        '<span class="sub mono">' + esc(c.tavus_conversation_id) + '</span></td>' +
         (want.client ? '<td>' + (cl ? esc(cl.name) : '<span class="pill off"><span class="gd"></span>Unassigned</span>') + '</td>' : '') +
         (want.persona ? '<td><div class="cellpersona">' + avatar(p ? p.name : '?', 'sm') + esc(p ? p.name : '—') + '</div></td>' : '') +
         (want.replica ? '<td>' + esc(rp ? rp.name : '—') + '</td>' : '') +
@@ -855,7 +908,7 @@
         (want.duration ? '<td class="num">' + fmtDur(c.duration_seconds) + '</td>' : '') +
         (want.turns ? '<td class="num">' + (turns ? turns + ' turns' : '—') + '</td>' : '') +
         '<td class="num">' + (c.has_transcript ? '<span class="btn sm" data-view="' + c.id + '">Transcript</span>' : '<span class="pill off"><span class="gd"></span>None</span>') + '</td></tr>';
-    }).join('') || emptyRow(9, state.convFilter ? 'Nothing matches that filter' : 'No conversations yet',
+    }).join('') || emptyRow(colCount, state.convFilter ? 'Nothing matches that filter' : 'No conversations yet',
       state.convFilter ? 'try a different term, or clear the filter' : 'sessions appear here as the sync pulls them in');
     return '<div class="card"><div class="cardh">Conversations<span class="hsub">' + esc(opt.of || '') + ' · click a column to sort · row → full chat</span></div>' +
       convFilterBar(rows.length, total) +
@@ -889,7 +942,9 @@
       body = '<div class="card"><div class="cardh">Personas using this face<span class="hsub">joined on personas.replica_id</span></div>' +
         '<table class="tbl"><tr><th>Persona (PAL)</th><th>Client</th><th class="num">Conversations</th><th class="num">Minutes</th><th></th></tr>' + prows + '</table></div>';
     } else if (state.replicaTab === 'conversations') {
-      body = convCard(convs, { of: 'recorded against this face', cols: ['persona', 'end_user', 'duration', 'turns'] });
+      body = '<div class="note">Showing ' + convs.length + ' stored session' + (convs.length === 1 ? '' : 's') + ' with full transcripts — not the same as the ' +
+        nf(cvs) + ' conversations totalled on the Overview tab, which reflects the whole synced period.</div>' +
+        convCard(convs, { of: 'recorded against this face', cols: ['persona', 'end_user', 'duration', 'turns'] });
     } else {
       body = '<div class="stats" style="grid-template-columns:repeat(4,1fr)">' +
         '<div class="stat"><div class="l">Minutes</div><div class="n">' + nf(mins) + '</div><div class="s">via ' + users.length + ' persona' + (users.length === 1 ? '' : 's') + '</div></div>' +
@@ -941,7 +996,7 @@
       return '<tr class="rowlink' + (state.report === r.id ? ' on' : '') + '" data-report="' + r.id + '"><td><b>' + esc(r.name) + '</b>' +
         '<span class="sub">' + r.headers.length + ' columns</span></td>' +
         '<td>' + esc(r.scope) + '</td><td>' + esc(r.period) + '</td><td class="num">' + nf(n) + '</td>' +
-        '<td class="num"><span class="btn sm" data-csv="' + r.id + '">Export CSV</span></td></tr>';
+        '<td class="num"><span class="btn sm" data-csv="' + r.id + '">Export CSV</span></td><td class="num chev">›</td></tr>';
     }).join('');
 
     var preview = '';
@@ -963,21 +1018,22 @@
 
     var content = ph('Reports', 'built live from the dataset — pick one to preview, export to download a real CSV') +
       '<div class="card"><div class="cardh">Report definitions<span class="hsub">row → preview</span></div>' +
-      '<table class="tbl"><tr><th>Report</th><th>Scope</th><th>Period</th><th class="num">Rows</th><th class="num"></th></tr>' + rows + '</table></div>' +
+      '<table class="tbl"><tr><th>Report</th><th>Scope</th><th>Period</th><th class="num">Rows</th><th class="num"></th><th></th></tr>' + rows + '</table></div>' +
       preview;
     return shell('#/reports', content);
   }
 
   function scrUsers() {
-    var rows = DB.users.map(function (u) {
+    var list = state.userRoleFilter === 'all' ? DB.users : DB.users.filter(function (u) { return u.group === state.userRoleFilter; });
+    var rows = list.map(function (u) {
       return '<tr><td><div class="cellpersona">' + avatar(u.name, 'sm') + '<span><b>' + esc(u.name) + '</b><span class="sub">' + esc(u.title || '') + '</span></span></div></td>' +
         '<td class="mono">' + esc(u.email) + '</td><td>' + esc(roleLabel(u.group)) + '</td>' +
         '<td>' + (u.client_id ? esc(IX.clientsById[u.client_id].name) : '—') + '</td><td>' + statusPill(u.status) + '</td>' +
         '<td>' + (u.last_active ? ago(u.last_active) : '—') + '</td>' +
         '<td class="num"><span class="btn sm" data-stub="Prototype stub — user management is not wired">' + (u.status === 'invited' ? 'Resend' : 'Edit') + '</span></td></tr>';
-    }).join('');
-    var content = ph('Users', 'internal + client logins', '<span class="sel">All roles</span>' + (canProvision() ? '<span class="btnp" data-stub="Invite flow is a prototype stub">+ Invite user</span>' : '')) +
-      '<div class="card"><table class="tbl"><tr><th>Name</th><th>Email</th><th>Role (Cognito group)</th><th>Client</th><th>Status</th><th>Last active</th><th class="num">Actions</th></tr>' + rows + '</table></div>';
+    }).join('') || emptyRow(7, 'No logins match this filter', 'try a different role');
+    var content = ph('Users', 'internal + client logins', roleFilterDropdown() + (canProvision() ? '<span class="btnp" data-stub="Invite flow is a prototype stub">+ Invite user</span>' : '')) +
+      '<div class="card"><div class="tscroll"><table class="tbl"><tr><th>Name</th><th>Email</th><th>Role (Cognito group)</th><th>Client</th><th>Status</th><th>Last active</th><th class="num">Actions</th></tr>' + rows + '</table></div></div>';
     return shell('#/users', content);
   }
 
@@ -1036,14 +1092,8 @@
   }
   function scrCConversations(cid) {
     var convs = DB.conversations.filter(function (c) { var p = IX.personasById[c.persona_id]; return p && p.client_id === cid; });
-    var rows = convs.map(function (c) {
-      var p = IX.personasById[c.persona_id];
-      return '<tr class="rowlink" data-view="' + c.id + '"><td>' + fmtDateTime(c.started_at) + '</td>' +
-        '<td><div class="cellpersona">' + avatar(p.name, 'sm') + esc(p.name) + '</div></td>' +
-        '<td class="num">' + fmtDur(c.duration_seconds) + '</td><td class="num"><span class="btn sm" data-view="' + c.id + '">Transcript</span></td></tr>';
-    }).join('') || emptyRow(4, 'No conversations in this period', 'sessions with your personas will appear here');
     var content = ph('Conversations', convs.length + ' sessions', '<span class="sel">Persona</span><span class="sel">Last 14 days</span>') +
-      '<div class="card"><table class="tbl"><tr><th>Date / time</th><th>Persona</th><th class="num">Duration</th><th class="num">Transcript</th></tr>' + rows + '</table></div>';
+      convCard(convs, { of: 'your personas', cols: ['persona', 'duration', 'turns'] });
     return shell('#/c/conversations', content);
   }
   function scrCProfile(cid) {
@@ -1072,6 +1122,31 @@
     return shell('#/c/profile', ph('Profile & Settings', esc(IX.clientsById[cid].name)) + '<div class="g2 even">' + profile + org + '</div>');
   }
 
+  function scrSettings() {
+    var u = state.user;
+    var profile = '<div class="card"><div class="cardh">Your profile</div><div class="cardp" style="display:flex;flex-direction:column;gap:14px">' +
+      '<div class="fld">Full name<input class="inp" value="' + esc(u.name) + '"></div>' +
+      '<div class="fld">Email<div class="inp lock">' + esc(u.email) + '</div><span class="hint">your sign-in email is managed by your admin</span></div>' +
+      '<div class="fld">Role<div class="inp lock">' + esc(roleLabel(u.group)) + ' · Internal team</div></div>' +
+      '<div class="fld">Multi-factor authentication<div class="inp lock">' + (u.mfa_enabled ? 'Enabled' : 'Not enabled') + '</div></div>' +
+      '<div class="fld">Password<div style="display:flex;gap:8px;align-items:center"><div class="inp" style="flex:1">••••••••</div><span class="btn" data-stub="Password change is a prototype stub">Change</span></div></div>' +
+      '<div><span class="btnp" data-stub="Saved (prototype — nothing is persisted)">Save changes</span></div></div></div>';
+
+    var team;
+    if (canProvision()) {
+      var rows = DB.users.filter(function (x) { return !x.client_id; }).map(function (x) {
+        return '<tr><td><div class="cellpersona">' + avatar(x.name, 'sm') + '<b>' + esc(x.name) + '</b></div></td><td>' + esc(roleLabel(x.group)) + '</td>' +
+          '<td>' + statusPill(x.status) + '</td><td class="num"><span class="btn sm" data-stub="Prototype stub">' + (x.status === 'invited' ? 'Resend' : 'Edit') + '</span></td></tr>';
+      }).join('');
+      team = '<div class="card"><div class="cardh">Internal team<span class="hsub">internal-admin only</span><div class="r"><span class="btnp sm" data-stub="Invite sent (prototype)">+ Invite user</span></div></div>' +
+        '<table class="tbl"><tr><th>Name</th><th>Role</th><th>Status</th><th class="num"></th></tr>' + rows + '</table></div>';
+    } else {
+      team = '<div class="card"><div class="cardh">Internal team</div><div class="cardp"><div class="empty"><b>Not available to your role</b>' +
+        'you are signed in as internal-staff — only an internal-admin can view and invite team logins</div></div></div>';
+    }
+    return shell('#/settings', ph('Settings', esc(u.name)) + '<div class="g2 even">' + profile + team + '</div>');
+  }
+
   /* ============================================================================
      DATABASE — schema canvas (internal portal)
 
@@ -1088,7 +1163,7 @@
   var ER_TABLES = [
     { name: 'clients', pk: ['id'], fk: {}, x: 40, y: 320,
       note: 'tenant — the isolation boundary', rows: function () { return DB.clients; } },
-    { name: 'sync_status', pk: [], fk: {}, x: 40, y: 700, singleton: true,
+    { name: 'sync_status', pk: [], fk: {}, x: 800, y: 650, singleton: true,
       note: 'pipeline health · stands alone', rows: function () { return [DB.sync_status]; } },
     { name: 'users', pk: ['id'], fk: { client_id: 'clients' }, x: 420, y: 40,
       note: 'login · null client = internal team', rows: function () { return DB.users; } },
@@ -1225,9 +1300,11 @@
       er.tables.map(function (o) { return erCard(o, sel, related); }).join('') +
       '</div>' + legend + zoom + '</div>';
 
-    // 'full' drops the content column's padding and width cap so the canvas
-    // owns the whole viewport below the top bar.
-    return shell('#/database', canvas, 'full');
+    // 'full' drops the content column's width cap so the canvas gets the
+    // whole viewport width, while keeping the same padding + page header
+    // every other section uses.
+    var content = ph('Database', er.tables.length + ' tables · ' + er.edges.length + ' foreign keys · pan, zoom, and click a table to trace its relationships') + canvas;
+    return shell('#/database', content, 'full');
   }
 
   /* ---- Canvas pan / zoom -----------------------------------------------
@@ -1505,7 +1582,7 @@
     var R = {
       '#/overview': scrOverview, '#/clients': scrClients, '#/personas': scrPersonas,
       '#/replicas': scrReplicas, '#/conversations': scrConversations, '#/reports': scrReports, '#/users': scrUsers,
-      '#/database': scrDatabase, '#/explorer': scrExplorer,
+      '#/database': scrDatabase, '#/explorer': scrExplorer, '#/settings': scrSettings,
       '#/c/dashboard': function () { return scrCDashboard(cid); }, '#/c/minutes': function () { return scrCMinutes(cid); },
       '#/c/personas': function () { return scrCPersonas(cid); }, '#/c/conversations': function () { return scrCConversations(cid); },
       '#/c/profile': function () { return scrCProfile(cid); }
@@ -1515,7 +1592,25 @@
     app.innerHTML = fn();
     after();
   }
-  function after() { window.scrollTo(0, 0); wireDb(); }
+  // .tscroll caps table height at a fixed pixel budget, which can slice the
+  // last visible row exactly at the container's border. Snap the max-height
+  // down to the nearest full row so a row is always either fully shown or
+  // fully scrolled out of view, never cut mid-line.
+  function snapTscroll() {
+    var budget = 460;
+    document.querySelectorAll('.tscroll').forEach(function (el) {
+      el.style.maxHeight = '';
+      var rows = el.querySelectorAll('tr');
+      var total = 0, fit = 0;
+      for (var i = 0; i < rows.length; i++) {
+        total += rows[i].offsetHeight;
+        if (total > budget) break;
+        fit = total;
+      }
+      if (fit && el.scrollHeight > budget) el.style.maxHeight = fit + 'px';
+    });
+  }
+  function after() { window.scrollTo(0, 0); wireDb(); snapTscroll(); }
   function go(route) { if (location.hash === route) render(); else location.hash = route; }
 
   function toast(msg) {
@@ -1550,10 +1645,12 @@
 
   /* ---- Events ---------------------------------------------------------- */
   document.addEventListener('click', function (e) {
-    var t = e.target.closest('[data-nav],[data-signin],[data-switch],[data-signout],[data-demo-toggle],[data-acct-toggle],[data-menu-toggle],[data-nav-close],[data-open],[data-view],[data-close],[data-close-ov],[data-tab],[data-ptab],[data-rtab],[data-pfilter],[data-sort],[data-convclear],[data-report],[data-csv],[data-tsel],[data-topen],[data-texpand],[data-assign],[data-assign-toggle],[data-assign-commit],[data-unassign],[data-create-client],[data-sync],[data-topup],[data-topup-req],[data-stub],[data-period-toggle],[data-period],[data-export-toggle],[data-ovexport]');
+    var t = e.target.closest('[data-nav],[data-signin],[data-switch],[data-signout],[data-demo-toggle],[data-acct-toggle],[data-menu-toggle],[data-nav-close],[data-open],[data-view],[data-close],[data-close-ov],[data-tab],[data-ptab],[data-rtab],[data-pfilter],[data-sort],[data-convclear],[data-report],[data-csv],[data-tsel],[data-topen],[data-texpand],[data-assign],[data-assign-toggle],[data-assign-commit],[data-unassign],[data-create-client],[data-sync],[data-topup],[data-topup-req],[data-stub],[data-period-toggle],[data-period],[data-export-toggle],[data-ovexport],[data-csfilter-toggle],[data-csfilter],[data-urfilter-toggle],[data-urfilter]');
     if (state.acctMenu && !(t && (t.hasAttribute('data-switch') || t.hasAttribute('data-acct-toggle')))) { state.acctMenu = false; render(); }
     if (state.periodMenu && !(t && (t.hasAttribute('data-period') || t.hasAttribute('data-period-toggle')))) { state.periodMenu = false; render(); }
     if (state.exportMenu && !(t && (t.hasAttribute('data-ovexport') || t.hasAttribute('data-export-toggle')))) { state.exportMenu = false; render(); }
+    if (state.clientStatusMenu && !(t && (t.hasAttribute('data-csfilter') || t.hasAttribute('data-csfilter-toggle')))) { state.clientStatusMenu = false; render(); }
+    if (state.userRoleMenu && !(t && (t.hasAttribute('data-urfilter') || t.hasAttribute('data-urfilter-toggle')))) { state.userRoleMenu = false; render(); }
     if (!t) return;
 
     if (t.hasAttribute('data-signin')) {
@@ -1572,6 +1669,10 @@
     if (t.hasAttribute('data-period-toggle')) { state.periodMenu = !state.periodMenu; state.exportMenu = false; render(); return; }
     if (t.hasAttribute('data-period')) { state.ovPeriod = parseInt(t.getAttribute('data-period'), 10); state.periodMenu = false; render(); return; }
     if (t.hasAttribute('data-export-toggle')) { state.exportMenu = !state.exportMenu; state.periodMenu = false; render(); return; }
+    if (t.hasAttribute('data-csfilter-toggle')) { state.clientStatusMenu = !state.clientStatusMenu; render(); return; }
+    if (t.hasAttribute('data-csfilter')) { state.clientStatusFilter = t.getAttribute('data-csfilter'); state.clientStatusMenu = false; render(); return; }
+    if (t.hasAttribute('data-urfilter-toggle')) { state.userRoleMenu = !state.userRoleMenu; render(); return; }
+    if (t.hasAttribute('data-urfilter')) { state.userRoleFilter = t.getAttribute('data-urfilter'); state.userRoleMenu = false; render(); return; }
     if (t.hasAttribute('data-ovexport')) {
       exportOverview(t.getAttribute('data-ovexport'), overviewStats(state.ovPeriod || 14));
       state.exportMenu = false; render();

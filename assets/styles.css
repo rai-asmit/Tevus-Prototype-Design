@@ -208,7 +208,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; margin: 0; }
 .main { display: flex; flex-direction: column; min-width: 0; }
 .top { height: 66px; background: var(--paper); border-bottom: 2px solid var(--graphite); display: flex; align-items: center; gap: 14px; padding: 0 28px; flex: none; position: sticky; top: 0; z-index: 6; }
 /* the hand font runs wider than Inter did — the placeholder must not wrap */
-.search { width: 340px; height: 40px; border: 1.5px solid var(--graphite); border-radius: var(--r-md); color: var(--muted-soft); display: flex; align-items: center; padding: 0 12px 0 38px; font-size: 14px; background: var(--paper); position: relative; white-space: nowrap; overflow: hidden; }
+.search { width: 340px; height: 40px; border: 1.5px solid var(--graphite); border-radius: var(--r-md); color: var(--muted-soft); display: flex; align-items: center; padding: 0 12px 0 38px; font-size: 14px; background: var(--paper); position: relative; white-space: nowrap; overflow: hidden; cursor: pointer; }
+.search:hover { background: var(--paper-warm); }
 .search::before { content: ""; position: absolute; left: 13px; width: 13px; height: 13px; border-radius: var(--r-dot); border: 1.8px solid var(--muted); box-shadow: 3.5px 3.5px 0 -1.4px var(--muted); transform: translateY(-1px); }
 .search .kbd { margin-left: auto; font: 12px var(--font-mono); color: var(--muted); border: 1.5px solid var(--hairline); border-radius: var(--r-xs); padding: 0 6px; }
 .menu-btn { align-items: center; justify-content: center; width: 40px; height: 40px; flex: none; border: 1.5px solid var(--graphite); border-radius: var(--r-md); background: var(--paper); color: var(--ink); cursor: pointer; }
@@ -313,13 +314,13 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; margin: 0; }
 .chart svg path[stroke] { stroke: var(--graphite) !important; stroke-width: 2.4; }
 .chart svg path[fill^="url"], .chart svg path[fill="#111111"] { fill: url(#hatch); fill-opacity: 1; }
 .chart svg circle { fill: var(--graphite) !important; }
-.chart-y { position: absolute; top: 2px; left: 4px; font: 12px var(--font-mono); color: var(--muted); background: var(--paper); padding-right: 6px; }
+.chart-y { position: absolute; top: 9px; left: 4px; font: 12px var(--font-mono); color: var(--muted); background: var(--paper); padding-right: 6px; }
 .axis { display: flex; justify-content: space-between; font: 12px var(--font-mono); color: var(--muted); margin-top: 9px; }
 .chart-legend { display: flex; align-items: center; gap: 14px; font-size: 13px; color: var(--muted); margin-bottom: 12px; }
 .chart-legend .sw { width: 9px; height: 9px; background: var(--graphite); display: inline-block; margin-right: 6px; }
 
 /* horizontal bar rows */
-.hrow { display: grid; grid-template-columns: 132px 1fr 66px; align-items: center; gap: 12px; font-size: 14px; color: var(--body); }
+.hrow { display: grid; grid-template-columns: 152px 1fr 66px; align-items: center; gap: 12px; font-size: 14px; color: var(--body); }
 .hrow > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .hrow .track { background: var(--paper); border: 1.5px solid var(--graphite); border-radius: var(--r-xs); height: 15px; overflow: hidden; }
 .hrow i { height: 100%; min-width: 3px; background-image: var(--hatch-strong); background-color: var(--paper-shade); border-right: 1.5px solid var(--graphite); display: block; transition: width var(--dur-lg) var(--ease); }
@@ -338,6 +339,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; margin: 0; }
 .tbl tr.rowlink:hover .chev { color: var(--ink); }
 .tbl td b { color: var(--ink); font-weight: 700; }
 .tbl td .sub { display: block; font-size: 12.5px; color: var(--muted); margin-top: 1px; }
+.convtime { display: flex; align-items: baseline; gap: 8px; }
+.convtime b { font-family: var(--font-mono); font-size: 14.5px; letter-spacing: .02em; }
+.convtime .ago { font: 11.5px var(--font-mono); color: var(--muted-soft); white-space: nowrap; }
+.daysep td { padding: 7px 20px; border-bottom: 1.5px dashed var(--hairline); background-image: var(--hatch); background-color: var(--paper-warm); font: 12px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .num { text-align: right; }
 .tbl th.num { text-align: right; }
 .cellpersona { display: flex; align-items: center; gap: 10px; }
@@ -382,9 +387,13 @@ input.inp:focus { outline: none; box-shadow: 0 0 0 3px var(--rule); }
 .drawer-head .x { margin-left: auto; width: 30px; height: 30px; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; color: var(--muted); cursor: pointer; font-size: 16px; }
 .drawer-head .x:hover { background: var(--paper-shade); color: var(--ink); }
 .hr { height: 0; border-top: 1.5px dashed var(--hairline); }
+.metarow { display: flex; flex-wrap: wrap; gap: 8px; }
+.mchip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; font-size: 12.5px; color: var(--muted); border: 1.5px dashed var(--hairline); }
+.mchip .ic { width: 13px; height: 13px; flex: none; opacity: .8; }
 .thread { display: flex; flex-direction: column; gap: 10px; overflow: auto; flex: 1; padding-right: 4px; }
 /* the two speakers are told apart by side + shading, not by a brand colour */
 .bub { max-width: 86%; padding: 10px 14px; font-size: 14.5px; line-height: 1.55; border: 1.5px solid var(--graphite); }
+.bub .bubt { display: block; font-size: 11px; color: var(--muted-soft); margin-bottom: 3px; letter-spacing: .03em; }
 .bub.persona { background: var(--paper); color: var(--body); align-self: flex-start; border-radius: var(--r-md); border-bottom-left-radius: 3px; }
 .bub.end_user { background-image: var(--hatch-strong); background-color: var(--paper-warm); color: var(--ink); align-self: flex-end; border-radius: var(--r-md); border-bottom-right-radius: 3px; }
 .mend { display: flex; justify-content: flex-end; gap: 8px; margin-top: 2px; }
@@ -428,11 +437,12 @@ input.inp:focus { outline: none; box-shadow: 0 0 0 3px var(--rule); }
    one SVG layer of relationship lines, drawn freehand through #rough.
    Card geometry is mirrored in app.js `ER` — change both together.
    ========================================================================= */
-.content.full { max-width: none; padding: 0; gap: 0; height: calc(100vh - 68px); }
+.content.full { max-width: none; height: calc(100vh - 68px); }
 .erhint { font: 13px var(--font-mono); color: var(--muted); }
 
 .ercanvas {
   position: relative; flex: 1; min-height: 0; background: var(--desk);
+  border: 2px solid var(--graphite); border-radius: var(--r-lg); box-shadow: var(--shadow-sm);
   overflow: hidden; cursor: grab; touch-action: none; user-select: none;
 }
 .ercanvas.grabbing { cursor: grabbing; }
