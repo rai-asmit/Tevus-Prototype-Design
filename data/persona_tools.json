@@ -1,0 +1,9 @@
+[
+  { "id": "pt_1", "persona_id": "per_faq",       "tool_id": "tool_lookup_order" },
+  { "id": "pt_2", "persona_id": "per_sales",     "tool_id": "tool_lookup_order" },
+  { "id": "pt_3", "persona_id": "per_support",   "tool_id": "tool_create_ticket" },
+  { "id": "pt_4", "persona_id": "per_concierge", "tool_id": "tool_book_appt" },
+  { "id": "pt_5", "persona_id": "per_greeter",   "tool_id": "tool_check_stock" },
+  { "id": "pt_6", "persona_id": "per_bugtriage", "tool_id": "tool_log_bug" },
+  { "id": "pt_7", "persona_id": "per_tripdesk",  "tool_id": "tool_change_booking" }
+]

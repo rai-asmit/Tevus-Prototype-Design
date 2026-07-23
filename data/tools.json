@@ -1,0 +1,8 @@
+[
+  { "id": "tool_lookup_order",   "client_id": "cli_acme",     "name": "lookup_order",   "description": "Fetch an order's status by order ID.",        "http_method": "GET",   "created_at": "2026-07-01T09:30:00Z" },
+  { "id": "tool_create_ticket",  "client_id": "cli_globex",   "name": "create_ticket",  "description": "Open a support ticket in the helpdesk.",     "http_method": "POST",  "created_at": "2026-07-01T10:15:00Z" },
+  { "id": "tool_book_appt",      "client_id": "cli_umbrella", "name": "book_appointment","description": "Create or move a calendar appointment.",     "http_method": "POST",  "created_at": "2026-07-01T11:30:00Z" },
+  { "id": "tool_check_stock",    "client_id": "cli_stark",    "name": "check_stock",    "description": "Check store inventory for a product.",       "http_method": "GET",   "created_at": "2026-07-10T09:15:00Z" },
+  { "id": "tool_log_bug",        "client_id": "cli_aman",     "name": "log_bug",        "description": "File a bug with severity in the tracker.",    "http_method": "POST",  "created_at": "2026-07-05T09:30:00Z" },
+  { "id": "tool_change_booking", "client_id": "cli_arora",    "name": "change_booking", "description": "Amend a flight or itinerary booking.",       "http_method": "PATCH", "created_at": "2026-07-03T09:45:00Z" }
+]

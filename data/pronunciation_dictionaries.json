@@ -1,0 +1,4 @@
+[
+  { "id": "pron_acme",  "client_id": "cli_acme",  "name": "Manish Corp product names", "locale": "en-US", "entries": 8,  "created_at": "2026-07-01T09:25:00Z" },
+  { "id": "pron_arora", "client_id": "cli_arora", "name": "Arora route & city names",  "locale": "hi-IN", "entries": 12, "created_at": "2026-07-03T09:35:00Z" }
+]

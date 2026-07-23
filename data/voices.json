@@ -1,0 +1,7 @@
+[
+  { "id": "voi_rachel", "tavus_voice_id": "v_rachel01", "name": "Rachel",            "gender": "female", "locale": "en-US", "client_id": null,        "last_synced_at": "2026-07-21T14:05:00Z", "_note": "Tavus stock voice — client_id null = available to every persona." },
+  { "id": "voi_adam",   "tavus_voice_id": "v_adam02",   "name": "Adam",              "gender": "male",   "locale": "en-US", "client_id": null,        "last_synced_at": "2026-07-21T14:05:00Z" },
+  { "id": "voi_sofia",  "tavus_voice_id": "v_sofia03",  "name": "Sofia",             "gender": "female", "locale": "en-US", "client_id": null,        "last_synced_at": "2026-07-21T14:05:00Z" },
+  { "id": "voi_acme",   "tavus_voice_id": "v_acme04",   "name": "Manish Corp Brand", "gender": "female", "locale": "en-US", "client_id": "cli_acme",  "last_synced_at": "2026-07-21T14:05:00Z", "_note": "Client-cloned custom voice — scoped to Manish Corporation only." },
+  { "id": "voi_arora",  "tavus_voice_id": "v_arora05",  "name": "Arora Hindi",       "gender": "female", "locale": "hi-IN", "client_id": "cli_arora", "last_synced_at": "2026-07-21T14:05:00Z" }
+]

@@ -1,0 +1,7 @@
+[
+  { "id": "ps_1", "persona_id": "per_concierge", "skill_id": "skl_calendar" },
+  { "id": "ps_2", "persona_id": "per_tripdesk",  "skill_id": "skl_calendar" },
+  { "id": "ps_3", "persona_id": "per_sales",     "skill_id": "skl_web_search" },
+  { "id": "ps_4", "persona_id": "per_support",   "skill_id": "skl_sentiment" },
+  { "id": "ps_5", "persona_id": "per_bugtriage", "skill_id": "skl_sentiment" }
+]

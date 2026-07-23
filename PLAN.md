@@ -39,19 +39,40 @@ Just **double-click `index.html`** — it runs offline, no server needed. You la
 
 ## 3. The dummy data model (`data/*.json`)
 
-These files are the deliverable "schema + dummy data." They mirror the real data model from the implementation plan, so the client sees the actual shape of the system. `build.py` bundles them into `assets/db.js` so the page runs by double-click (browsers block `fetch()` of local files). **The JSON files are the source of truth** — edit them, run `python3 build.py`, refresh.
+These files are the deliverable "schema + dummy data." They mirror the real data model from the implementation plan, so the client sees the actual shape of the system. `build.py` (or `node build.js` on machines without Python — identical output) bundles them into `assets/db.js` so the page runs by double-click (browsers block `fetch()` of local files). **The JSON files are the source of truth** — edit them, re-run the bundler, refresh.
 
+The model is organised in four dependency layers — every table traces back to a **client**, and every relationship line on the Database canvas runs left → right:
+
+**Layer A · tenancy (the isolation boundary)**
 | File | Entity | Key fields | Requirement |
 |---|---|---|---|
-| `clients.json` | Client org (tenant) | id, name, status, term, budget_minutes | 4.1, 4.3 |
-| `personas.json` | Persona / PAL | id, tavus_persona_id, **client_id (null = unassigned)**, replica_id, system_prompt | 3.1, 4.4/4.5, 5.3 |
-| `replicas.json` | Replica / Face | id, tavus_replica_id, client_id, status | 4.4, 5.5 |
-| `conversations.json` | End-user session | id, persona_id, replica_id, started_at, duration_seconds | 3.1 |
-| `transcripts.json` | Turn-by-turn transcript | conversation_id, turns[] | 3.4, 6.4 |
-| `minute_ledger.json` | Budget ledger (append-only) | client_id, type (initial/topup/usage), amount, balance_after | 4.3, 7.x |
+| `clients.json` | Client org (tenant) | id, name, status, plan, region, term, budget_minutes | 4.1, 4.3 |
 | `users.json` | Login | id, email, **group** (Cognito role), client_id, status | 2.1/2.2, 4.2 |
-| `usage_daily.json` | Daily usage rollup | client_id, persona_id, date, conversations, minutes | 5.4 charts |
+
+**Layer B · client-scoped assets & catalogs (synced from Tavus)**
+| `replicas.json` | Replica / Face | id, tavus_replica_id, client_id, status | 4.4, 5.5 |
+| `voices.json` | TTS voice | id, tavus_voice_id, name, **client_id (null = Tavus stock)** | 5.3 |
+| `pronunciation_dictionaries.json` | Custom TTS pronunciation | id, client_id, name, locale, entries | 5.3 |
+| `tools.json` | Function-calling tool (client catalog) | id, client_id, name, http_method | 5.3 |
+| `skills.json` | Prebuilt capability (Tavus catalog) | id, name, category | 5.3 |
+| `minute_ledger.json` | Budget ledger (append-only) | client_id, type (initial/topup/usage), amount, balance_after | 4.3, 7.x |
+
+**Layer C · the PAL, plus the standalone pipeline monitor**
+| `personas.json` | Persona / PAL | id, tavus_persona_id, **client_id (null = unassigned)**, replica_id, voice_id, pronunciation_id, status, system_prompt | 3.1, 4.4/4.5, 5.3 |
 | `sync_status.json` | Data-freshness / pipeline health | last_sync_at, interval, recent_runs | 3.1–3.3, 5.6 |
+
+**Layer D · a PAL's configuration, its sessions, and rollups**
+| `deployments.json` | Published PAL on an environment | id, persona_id, environment (dev/prod), conferencing_username, status | Ops |
+| `objectives.json` | Conversation goals for a PAL | id, persona_id, name, prompt | 5.3 |
+| `guardrails.json` | Safety / policy rules for a PAL | id, persona_id, rule, action | 5.3 |
+| `knowledge_documents.json` | RAG source docs for a PAL | id, persona_id, title, source_url, status | 5.3 |
+| `persona_tools.json` | Attach — which tools a PAL uses (M:N) | id, persona_id, tool_id | 5.3 |
+| `persona_skills.json` | Attach — which skills a PAL uses (M:N) | id, persona_id, skill_id | 5.3 |
+| `conversations.json` | End-user session | id, persona_id, deployment_id, replica_id, started_at, duration_seconds, status, ended_reason | 3.1 |
+| `usage_daily.json` | Daily usage rollup | client_id, persona_id, date, conversations, minutes | 5.4 charts |
+
+**Layer E · transcript, one per conversation**
+| `transcripts.json` | Turn-by-turn transcript | conversation_id, turns[] | 3.4, 6.4 |
 
 **Everything on screen is derived** from these files: client balances come from the ledger, persona/client totals come from `usage_daily`, the charts plot the real daily series. Nothing is hard-coded — change the data and the UI changes.
 

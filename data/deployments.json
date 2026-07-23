@@ -1,0 +1,10 @@
+[
+  { "id": "dep_sales",     "persona_id": "per_sales",     "environment": "prod", "conferencing_username": "manishcorp-sales",     "status": "live",   "created_at": "2026-07-01T10:00:00Z" },
+  { "id": "dep_sales_dev", "persona_id": "per_sales",     "environment": "dev",  "conferencing_username": "manishcorp-sales-dev", "status": "live",   "created_at": "2026-07-01T10:02:00Z", "_note": "Same PAL deployed to two environments — dev/prod separation (Req: Ops)." },
+  { "id": "dep_faq",       "persona_id": "per_faq",       "environment": "prod", "conferencing_username": "manishcorp-faq",       "status": "live",   "created_at": "2026-07-02T11:00:00Z" },
+  { "id": "dep_support",   "persona_id": "per_support",   "environment": "prod", "conferencing_username": "asmitlabs-support",     "status": "live",   "created_at": "2026-07-01T10:30:00Z" },
+  { "id": "dep_concierge", "persona_id": "per_concierge", "environment": "prod", "conferencing_username": "mohan-concierge",       "status": "live",   "created_at": "2026-07-01T12:00:00Z" },
+  { "id": "dep_greeter",   "persona_id": "per_greeter",   "environment": "prod", "conferencing_username": "jay-greeter",           "status": "live",   "created_at": "2026-07-10T10:00:00Z" },
+  { "id": "dep_bugtriage", "persona_id": "per_bugtriage", "environment": "prod", "conferencing_username": "amanbugfree-triage",    "status": "live",   "created_at": "2026-07-05T10:00:00Z" },
+  { "id": "dep_tripdesk",  "persona_id": "per_tripdesk",  "environment": "prod", "conferencing_username": "arora-tripdesk",        "status": "live",   "created_at": "2026-07-03T10:00:00Z" }
+]

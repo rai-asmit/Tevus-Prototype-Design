@@ -44,7 +44,7 @@
     report: null,                                       // report being previewed
     lastRoute: null,
     tree: { open: {}, sel: null, seeded: false },       // explorer tree
-    db: { z: 1, x: 0, y: 0, sel: null, ready: false }   // schema-canvas view (survives re-renders)
+    db: { z: 1, x: 0, y: 0, sel: null, ready: false, collapsed: {} }   // schema-canvas view (survives re-renders)
   };
 
   /* ---- Derived data layer (recomputed after any mutation) -------------- */
@@ -55,6 +55,11 @@
     IX.personasById = index(DB.personas);
     IX.replicasById = index(DB.replicas);
     IX.usersById = index(DB.users);
+    // FK targets reachable by clicking a link in the record panel (persona → voice /
+    // pronunciation, conversation → deployment) need an index so the panel can resolve them.
+    IX.voicesById = index(DB.voices);
+    IX.deploymentsById = index(DB.deployments);
+    IX.pronunciationById = index(DB.pronunciation_dictionaries);
 
     // per-persona period totals from usage_daily
     IX.personaTotals = {};
@@ -1160,24 +1165,56 @@
      Geometry constants must stay in sync with the .erc rules in styles.css.
      ========================================================================= */
   var ER = { W: 290, HEAD: 48, ROW: 26, FOOT: 30, PAD: 40 };   // W fits the longest column name in Cutive Mono
+  // Laid out in four dependency layers, left → right, so every relationship line runs forward:
+  //   clients (tenant)  →  client-scoped assets & catalogs  →  personas (PAL)  →  a PAL's config, sessions & rollups  →  transcripts
   var ER_TABLES = [
-    { name: 'clients', pk: ['id'], fk: {}, x: 40, y: 320,
+    // ── Layer A · tenancy — the isolation boundary ──────────────────────────
+    { name: 'clients', pk: ['id'], fk: {}, x: 40, y: 760,
       note: 'tenant — the isolation boundary', rows: function () { return DB.clients; } },
-    { name: 'sync_status', pk: [], fk: {}, x: 800, y: 650, singleton: true,
-      note: 'pipeline health · stands alone', rows: function () { return [DB.sync_status]; } },
-    { name: 'users', pk: ['id'], fk: { client_id: 'clients' }, x: 420, y: 40,
+
+    // ── Layer B · client-scoped assets & catalogs (synced from Tavus) ───────
+    { name: 'users', pk: ['id'], fk: { client_id: 'clients' }, x: 430, y: 40,
       note: 'login · null client = internal team', rows: function () { return DB.users; } },
-    { name: 'replicas', pk: ['id'], fk: { client_id: 'clients' }, x: 420, y: 400,
+    { name: 'replicas', pk: ['id'], fk: { client_id: 'clients' }, x: 430, y: 360,
       note: 'face, synced from Tavus', rows: function () { return DB.replicas; } },
-    { name: 'minute_ledger', pk: ['id'], fk: { client_id: 'clients' }, x: 420, y: 682,
+    { name: 'voices', pk: ['id'], fk: { client_id: 'clients' }, x: 430, y: 650,
+      note: 'TTS voice · null client = Tavus stock', rows: function () { return DB.voices; } },
+    { name: 'pronunciation_dictionaries', pk: ['id'], fk: { client_id: 'clients' }, x: 430, y: 940,
+      note: 'custom TTS pronunciation', rows: function () { return DB.pronunciation_dictionaries; } },
+    { name: 'tools', pk: ['id'], fk: { client_id: 'clients' }, x: 430, y: 1230,
+      note: 'function-calling tool · client catalog', rows: function () { return DB.tools; } },
+    { name: 'skills', pk: ['id'], fk: {}, x: 430, y: 1520,
+      note: 'prebuilt capability · Tavus catalog', rows: function () { return DB.skills; } },
+    { name: 'minute_ledger', pk: ['id'], fk: { client_id: 'clients' }, x: 430, y: 1760,
       note: 'append-only — balance is derived', rows: function () { return DB.minute_ledger; } },
-    { name: 'personas', pk: ['id'], fk: { client_id: 'clients', replica_id: 'replicas' }, x: 800, y: 270,
-      note: 'PAL · null client = unassigned', rows: function () { return DB.personas; } },
-    { name: 'conversations', pk: ['id'], fk: { persona_id: 'personas', replica_id: 'replicas' }, x: 1180, y: 120,
+
+    // ── Layer C · the PAL, plus the standalone pipeline monitor ─────────────
+    { name: 'personas', pk: ['id'],
+      fk: { client_id: 'clients', replica_id: 'replicas', voice_id: 'voices', pronunciation_id: 'pronunciation_dictionaries' },
+      x: 820, y: 560, note: 'PAL · null client = unassigned', rows: function () { return DB.personas; } },
+    { name: 'sync_status', pk: [], fk: {}, x: 820, y: 1620, singleton: true,
+      note: 'pipeline health · stands alone', rows: function () { return [DB.sync_status]; } },
+
+    // ── Layer D · a PAL's configuration, its sessions, and rollups ──────────
+    { name: 'deployments', pk: ['id'], fk: { persona_id: 'personas' }, x: 1210, y: 40,
+      note: 'published PAL on dev / prod', rows: function () { return DB.deployments; } },
+    { name: 'objectives', pk: ['id'], fk: { persona_id: 'personas' }, x: 1210, y: 330,
+      note: 'conversation goals for a PAL', rows: function () { return DB.objectives; } },
+    { name: 'guardrails', pk: ['id'], fk: { persona_id: 'personas' }, x: 1210, y: 560,
+      note: 'safety / policy rules for a PAL', rows: function () { return DB.guardrails; } },
+    { name: 'knowledge_documents', pk: ['id'], fk: { persona_id: 'personas' }, x: 1210, y: 790,
+      note: 'RAG source docs for a PAL', rows: function () { return DB.knowledge_documents; } },
+    { name: 'persona_tools', pk: ['id'], fk: { persona_id: 'personas', tool_id: 'tools' }, x: 1210, y: 1080,
+      note: 'attach · which tools this PAL uses', rows: function () { return DB.persona_tools; } },
+    { name: 'persona_skills', pk: ['id'], fk: { persona_id: 'personas', skill_id: 'skills' }, x: 1210, y: 1300,
+      note: 'attach · which skills this PAL uses', rows: function () { return DB.persona_skills; } },
+    { name: 'conversations', pk: ['id'], fk: { persona_id: 'personas', deployment_id: 'deployments', replica_id: 'replicas' }, x: 1210, y: 1520,
       note: 'session — owner inherited via persona', rows: function () { return DB.conversations; } },
     { name: 'usage_daily', pk: ['client_id', 'persona_id', 'date'], fk: { client_id: 'clients', persona_id: 'personas' },
-      x: 1180, y: 500, note: 'daily rollup · composite key', rows: function () { return DB.usage_daily; } },
-    { name: 'transcripts', pk: ['conversation_id'], fk: { conversation_id: 'conversations' }, x: 1560, y: 210,
+      x: 1210, y: 1920, note: 'daily rollup · composite key', rows: function () { return DB.usage_daily; } },
+
+    // ── Layer E · transcript, one per conversation ──────────────────────────
+    { name: 'transcripts', pk: ['conversation_id'], fk: { conversation_id: 'conversations' }, x: 1600, y: 1560,
       note: 'one per conversation · key is the link', rows: function () { return Object.keys(DB.transcripts).map(function (k) { return DB.transcripts[k]; }); } }
   ];
 
@@ -1213,12 +1250,19 @@
   }
   function colIndex(cols, name) { for (var i = 0; i < cols.length; i++) if (cols[i].name === name) return i; return -1; }
 
+  // vertical anchor for a column row on a card's edge. A collapsed card shows no
+  // rows, so every link into or out of it meets the header's mid-line instead.
+  function erRowY(o, idx) {
+    return o.collapsed ? o.t.y + ER.HEAD / 2 : o.t.y + ER.HEAD + idx * ER.ROW + ER.ROW / 2;
+  }
+
   var erLast = null;   // last built model — the pan/zoom wiring needs its bounds
   function erBuild() {
     var byName = {};
     var tables = ER_TABLES.map(function (t) {
-      var rows = t.rows(), cols = erCols(rows);
-      var o = { t: t, cols: cols, count: rows.length, h: ER.HEAD + cols.length * ER.ROW + ER.FOOT };
+      var rows = t.rows(), cols = erCols(rows), collapsed = !!state.db.collapsed[t.name];
+      var o = { t: t, cols: cols, count: rows.length, collapsed: collapsed,
+                h: collapsed ? ER.HEAD : ER.HEAD + cols.length * ER.ROW + ER.FOOT };
       byName[t.name] = o;
       return o;
     });
@@ -1231,8 +1275,8 @@
         if (ci < 0 || pi < 0) return;
         edges.push({
           from: parent.t.name, to: child.t.name, nullable: child.cols[ci].nullable,
-          x1: parent.t.x + ER.W, y1: parent.t.y + ER.HEAD + pi * ER.ROW + ER.ROW / 2,
-          x2: child.t.x, y2: child.t.y + ER.HEAD + ci * ER.ROW + ER.ROW / 2
+          x1: parent.t.x + ER.W, y1: erRowY(parent, pi),
+          x2: child.t.x, y2: erRowY(child, ci)
         });
       });
     });
@@ -1242,7 +1286,7 @@
   }
 
   var ER_MARKERS = ['', '-on'].map(function (s) {
-    var c = s ? '#111111' : '#c2c7ce';
+    var c = s ? '#c0563b' : '#5b7ea6';
     return '<marker id="erOne' + s + '" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto">' +
       '<circle cx="5" cy="5" r="2.6" fill="' + c + '"/></marker>' +
       '<marker id="erMany' + s + '" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto">' +
@@ -1252,16 +1296,23 @@
   function erCard(o, sel, related) {
     var t = o.t;
     var cls = sel ? (sel === t.name ? ' on' : (related[t.name] ? ' rel' : ' dim')) : '';
+    if (o.collapsed) cls += ' collapsed';
     var rows = o.cols.map(function (c) {
       var pk = t.pk.indexOf(c.name) >= 0, fk = !!t.fk[c.name];
       return '<div class="err' + (pk || fk ? ' key' : '') + '">' +
         '<span class="k">' + (pk ? '<em class="pk">PK</em>' : '') + (fk ? '<em class="fk">FK</em>' : '') + '</span>' +
         '<b>' + esc(c.name) + '</b><i>' + c.type + (c.nullable ? '?' : '') + '</i></div>';
     }).join('');
+    var sub = t.singleton ? 'single record' : nf(o.count) + ' rows';
+    if (o.collapsed) sub += ' · ' + o.cols.length + ' cols';
+    var caret = '<span class="ertog" data-dbtog="' + t.name + '" title="' + (o.collapsed ? 'Expand table' : 'Collapse table') + '">' + (o.collapsed ? '▸' : '▾') + '</span>';
     return '<div class="erc' + cls + '" data-dbsel="' + t.name + '" style="left:' + t.x + 'px;top:' + t.y + 'px;width:' + ER.W + 'px">' +
-      '<div class="erh"><b>' + t.name + '</b><span>' + (t.singleton ? 'single record' : nf(o.count) + ' rows') + '</span></div>' +
-      '<div class="ercols">' + rows + '</div>' +
-      '<div class="erf">' + esc(t.note) + '</div></div>';
+      caret +
+      '<div class="erh"><b>' + t.name + '</b><span>' + sub + '</span></div>' +
+      (o.collapsed ? '' :
+        '<div class="ercols">' + rows + '</div>' +
+        '<div class="erf">' + esc(t.note) + '</div>') +
+      '</div>';
   }
 
   function scrDatabase() {
@@ -1287,12 +1338,15 @@
       '<path class="ere" d="M6,6 L34,6" marker-start="url(#erOne)" marker-end="url(#erMany)"/></svg>one row → many rows</div>' +
       '<div><span class="k"><em class="q">?</em></span>nullable — link drawn dashed</div></div>';
 
+    var allCollapsed = ER_TABLES.every(function (t) { return state.db.collapsed[t.name]; });
     var zoom = '<div class="erzoom">' +
       '<button type="button" class="erz" data-dbz="out" title="Zoom out">−</button>' +
       '<span class="erpct" id="erPct">100%</span>' +
       '<button type="button" class="erz" data-dbz="in" title="Zoom in">+</button>' +
       '<span class="ersep"></span>' +
-      '<button type="button" class="erz wide" data-dbz="fit">Fit</button></div>';
+      '<button type="button" class="erz wide" data-dbz="fit">Fit</button>' +
+      '<span class="ersep"></span>' +
+      '<button type="button" class="erz wide" data-dball>' + (allCollapsed ? 'Expand all' : 'Collapse all') + '</button></div>';
 
     var canvas = '<div class="ercanvas" id="erCanvas">' +
       '<div class="erpan" style="width:' + er.w + 'px;height:' + er.h + 'px">' +
@@ -1300,11 +1354,10 @@
       er.tables.map(function (o) { return erCard(o, sel, related); }).join('') +
       '</div>' + legend + zoom + '</div>';
 
-    // 'full' drops the content column's width cap so the canvas gets the
-    // whole viewport width, while keeping the same padding + page header
-    // every other section uses.
-    var content = ph('Database', er.tables.length + ' tables · ' + er.edges.length + ' foreign keys · pan, zoom, and click a table to trace its relationships') + canvas;
-    return shell('#/database', content, 'full');
+    // 'full db' drops the content column's width cap AND its padding so the
+    // canvas becomes a true full-bleed sheet — no page header, no top/bottom
+    // gutter — using the whole area below the top bar.
+    return shell('#/database', canvas, 'full db');
   }
 
   /* ---- Canvas pan / zoom -----------------------------------------------
@@ -1362,6 +1415,21 @@
         if (a === 'fit') fit(); else zoomAt(r.width / 2, r.height / 2, v.z * (a === 'in' ? 1.25 : 0.8));
         return;
       }
+      if (e.target.closest('[data-dball]')) {       // collapse every table, or expand them all
+        var all = ER_TABLES.every(function (t) { return v.collapsed[t.name]; });
+        v.collapsed = {};
+        if (!all) ER_TABLES.forEach(function (t) { v.collapsed[t.name] = 1; });
+        v.ready = false;                            // re-fit so the diagram grows to fill the sheet
+        render();
+        return;
+      }
+      var tog = e.target.closest('[data-dbtog]');   // the caret collapses one table
+      if (tog) {
+        var nm = tog.getAttribute('data-dbtog');
+        if (v.collapsed[nm]) delete v.collapsed[nm]; else v.collapsed[nm] = 1;
+        render();
+        return;
+      }
       var c = e.target.closest('[data-dbsel]'), name = c && c.getAttribute('data-dbsel');
       v.sel = name === v.sel ? null : name;          // click the canvas (or the same card) to clear
       render();
@@ -1384,9 +1452,16 @@
     persona: { table: 'personas', get: function (id) { return IX.personasById[id]; }, route: function (id) { return '#/persona/' + id; } },
     replica: { table: 'replicas', get: function (id) { return IX.replicasById[id]; }, route: function (id) { return '#/replica/' + id; } },
     conversation: { table: 'conversations', get: function (id) { return IX.conversationsById[id]; }, route: null },
-    transcript: { table: 'transcripts', get: function (id) { return DB.transcripts[id]; }, route: null }
+    transcript: { table: 'transcripts', get: function (id) { return DB.transcripts[id]; }, route: null },
+    // reachable only by clicking a foreign key in the record panel — no tree node, no route
+    voice: { table: 'voices', get: function (id) { return IX.voicesById[id]; }, route: null },
+    pronunciation: { table: 'pronunciation_dictionaries', get: function (id) { return IX.pronunciationById[id]; }, route: null },
+    deployment: { table: 'deployments', get: function (id) { return IX.deploymentsById[id]; }, route: null }
   };
-  var TABLE_KIND = { clients: 'client', personas: 'persona', replicas: 'replica', conversations: 'conversation', transcripts: 'transcript' };
+  var TABLE_KIND = {
+    clients: 'client', personas: 'persona', replicas: 'replica', conversations: 'conversation', transcripts: 'transcript',
+    voices: 'voice', pronunciation_dictionaries: 'pronunciation', deployments: 'deployment'
+  };
 
   function treeRow(kind, id, label, meta, keyref, depth, kids) {
     var nid = kind + ':' + id;
@@ -1497,8 +1572,8 @@
     });
 
     var open = K.route ? '<span class="btn sm" data-nav="' + K.route(id) + '">Open ' + kind + '</span>' :
-      (kind === 'conversation' ? '<span class="btn sm" data-view="' + id + '">Transcript</span>' :
-        '<span class="btn sm" data-view="' + id + '">View transcript</span>');
+      (kind === 'conversation' || kind === 'transcript' ? '<span class="btn sm" data-view="' + id + '">Transcript</span>' :
+        '<span class="note">synced from Tavus</span>');
 
     return '<div class="card"><div class="cardh"><span class="tk k-' + kind + '">' + kind.charAt(0).toUpperCase() + '</span>' +
       esc(rec.name || id) + '<span class="hsub">' + K.table + '</span><div class="r">' + open + '</div></div>' +

@@ -1,0 +1,8 @@
+[
+  { "id": "kb_refund",      "persona_id": "per_faq",       "title": "Refund Policy",        "source_url": "https://manishcorp.com/help/refunds",   "status": "ready",    "last_crawled_at": "2026-07-20T02:00:00Z" },
+  { "id": "kb_shipping",    "persona_id": "per_faq",       "title": "Shipping FAQ",         "source_url": "https://manishcorp.com/help/shipping",  "status": "ready",    "last_crawled_at": "2026-07-20T02:00:00Z" },
+  { "id": "kb_pricing",     "persona_id": "per_sales",     "title": "Pricing Sheet",        "source_url": "https://manishcorp.com/pricing",        "status": "ready",    "last_crawled_at": "2026-07-20T02:00:00Z" },
+  { "id": "kb_troubleshoot","persona_id": "per_support",   "title": "Troubleshooting Guide","source_url": "https://asmitlabs.com/docs/troubleshoot","status": "ready",    "last_crawled_at": "2026-07-19T02:00:00Z" },
+  { "id": "kb_severity",    "persona_id": "per_bugtriage", "title": "Severity Rubric",      "source_url": "https://amanbugfree.com/docs/severity", "status": "ready",    "last_crawled_at": "2026-07-18T02:00:00Z" },
+  { "id": "kb_visa",        "persona_id": "per_tripdesk",  "title": "Visa Requirements",    "source_url": "https://aroratravels.com/visa",         "status": "crawling", "last_crawled_at": "2026-07-21T02:00:00Z" }
+]

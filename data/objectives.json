@@ -1,0 +1,15 @@
+[
+  { "id": "obj_sal1", "persona_id": "per_sales",     "order": 1, "name": "Qualify the lead",       "prompt": "Find out team size, use case, and timeline before recommending a plan." },
+  { "id": "obj_sal2", "persona_id": "per_sales",     "order": 2, "name": "Recommend a plan",       "prompt": "Match the visitor to Starter, Pro, or Scale based on what they shared." },
+  { "id": "obj_sal3", "persona_id": "per_sales",     "order": 3, "name": "Hand off large deals",   "prompt": "For 50+ seats, collect contact details and route to a human sales rep." },
+  { "id": "obj_faq1", "persona_id": "per_faq",       "order": 1, "name": "Answer concisely",       "prompt": "Resolve the product question in three sentences or fewer." },
+  { "id": "obj_sup1", "persona_id": "per_support",   "order": 1, "name": "Triage the issue",       "prompt": "Classify the problem and attempt the standard fix before escalating." },
+  { "id": "obj_sup2", "persona_id": "per_support",   "order": 2, "name": "Open a ticket",          "prompt": "If unresolved, gather repro steps and create a support ticket." },
+  { "id": "obj_con1", "persona_id": "per_concierge", "order": 1, "name": "Manage the booking",     "prompt": "Help the caller book, reschedule, or cancel an appointment." },
+  { "id": "obj_con2", "persona_id": "per_concierge", "order": 2, "name": "Confirm in writing",     "prompt": "Send a confirmation once any change is made." },
+  { "id": "obj_gre1", "persona_id": "per_greeter",   "order": 1, "name": "Route the visitor",      "prompt": "Greet the shopper and direct them to the right product or aisle." },
+  { "id": "obj_bug1", "persona_id": "per_bugtriage", "order": 1, "name": "Capture the bug",        "prompt": "Collect what broke, severity, and steps to reproduce." },
+  { "id": "obj_bug2", "persona_id": "per_bugtriage", "order": 2, "name": "Route by severity",      "prompt": "Flag high-severity issues to the on-call engineer immediately." },
+  { "id": "obj_trp1", "persona_id": "per_tripdesk",  "order": 1, "name": "Resolve the itinerary",  "prompt": "Help the traveller check, change, or confirm a booking." },
+  { "id": "obj_trp2", "persona_id": "per_tripdesk",  "order": 2, "name": "Answer travel questions", "prompt": "Cover baggage, visa, and check-in queries from the knowledge base." }
+]

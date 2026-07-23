@@ -1,0 +1,6 @@
+[
+  { "id": "skl_calendar",      "name": "Calendar",           "category": "scheduling",    "description": "Read and write calendar events during a call." },
+  { "id": "skl_web_search",    "name": "Web Search",         "category": "knowledge",     "description": "Look up live information on the public web." },
+  { "id": "skl_sentiment",     "name": "Sentiment",          "category": "analytics",     "description": "Detect caller sentiment turn by turn." },
+  { "id": "skl_transcription", "name": "Live Transcription", "category": "accessibility", "description": "Produce a real-time transcript of the call." }
+]
