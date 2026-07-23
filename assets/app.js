@@ -1384,21 +1384,66 @@
     }
     if (v.ready) apply(); else { v.ready = true; fit(); }
 
-    var drag = null, moved = false;
+    function erEntry(name) {
+      for (var i = 0; i < ER_TABLES.length; i++) if (ER_TABLES[i].name === name) return ER_TABLES[i];
+      return null;
+    }
+    // while a card is dragged we redraw only the links touching it, straight on
+    // the existing <path> nodes — no re-render, so the drag stays smooth.
+    var linePaths = wrap.querySelectorAll('.erlines path.ere');
+    function restring(name, ddx, ddy) {
+      for (var i = 0; i < linePaths.length; i++) {
+        var e = erLast.edges[i];
+        if (e.from !== name && e.to !== name) continue;
+        var x1 = e.x1, y1 = e.y1, x2 = e.x2, y2 = e.y2;
+        if (e.from === name) { x1 += ddx; y1 += ddy; }
+        if (e.to === name) { x2 += ddx; y2 += ddy; }
+        var k = Math.max(56, (x2 - x1) * 0.42);
+        linePaths[i].setAttribute('d', 'M' + x1 + ',' + y1 + ' C' + (x1 + k) + ',' + y1 + ' ' + (x2 - k) + ',' + y2 + ' ' + x2 + ',' + y2);
+      }
+    }
+
+    // One gesture object drives everything. A press that never moves is a click
+    // (select a table, or toggle nothing); a press that moves either drags a
+    // card (started on a card) or pans the sheet (started on blank paper).
+    var g = null;
     wrap.addEventListener('pointerdown', function (e) {
-      if (e.target.closest('.erzoom, .erlegend')) return;
-      drag = { px: e.clientX, py: e.clientY, ox: v.x, oy: v.y }; moved = false;
-      wrap.setPointerCapture(e.pointerId); wrap.classList.add('grabbing');
+      if (e.target.closest('.erzoom, .erlegend, [data-dbtog]')) return;  // let these fire native clicks
+      var card = e.target.closest('.erc');
+      var t = card && erEntry(card.getAttribute('data-dbsel'));
+      g = { px: e.clientX, py: e.clientY, moved: false,
+            card: card, t: t, name: t && t.name,
+            ox: t ? t.x : 0, oy: t ? t.y : 0, vx: v.x, vy: v.y };
+      wrap.setPointerCapture(e.pointerId);
+      wrap.classList.add(t ? 'moving' : 'grabbing');
     });
     wrap.addEventListener('pointermove', function (e) {
-      if (!drag) return;
-      var dx = e.clientX - drag.px, dy = e.clientY - drag.py;
-      if (!moved && Math.abs(dx) + Math.abs(dy) > 4) moved = true;
-      if (moved) { v.x = drag.ox + dx; v.y = drag.oy + dy; apply(); }
+      if (!g) return;
+      var dx = e.clientX - g.px, dy = e.clientY - g.py;
+      if (!g.moved && Math.abs(dx) + Math.abs(dy) > 4) g.moved = true;
+      if (!g.moved) return;
+      if (g.t) {                                   // drag the card (canvas units = screen ÷ zoom)
+        g.t.x = g.ox + dx / v.z; g.t.y = g.oy + dy / v.z;
+        g.card.style.left = g.t.x + 'px'; g.card.style.top = g.t.y + 'px';
+        restring(g.name, g.t.x - g.ox, g.t.y - g.oy);
+      } else {                                     // pan the sheet
+        v.x = g.vx + dx; v.y = g.vy + dy; apply();
+      }
     });
-    function endDrag() { drag = null; wrap.classList.remove('grabbing'); }
-    wrap.addEventListener('pointerup', endDrag);
-    wrap.addEventListener('pointercancel', endDrag);
+    function endGesture(e) {
+      if (!g) return;
+      var gg = g; g = null;
+      wrap.classList.remove('grabbing', 'moving');
+      try { wrap.releasePointerCapture(e.pointerId); } catch (_) {}
+      if (!gg.moved) {                             // a click, not a drag
+        if (gg.t) { v.sel = gg.name === v.sel ? null : gg.name; render(); }
+        else if (v.sel) { v.sel = null; render(); }
+        return;
+      }
+      if (gg.t) render();                          // settle the moved card + redraw links cleanly
+    }
+    wrap.addEventListener('pointerup', endGesture);
+    wrap.addEventListener('pointercancel', endGesture);
 
     wrap.addEventListener('wheel', function (e) {
       e.preventDefault();
@@ -1406,9 +1451,9 @@
       zoomAt(e.clientX - r.left, e.clientY - r.top, v.z * (e.deltaY < 0 ? 1.12 : 1 / 1.12));
     }, { passive: false });
 
+    // Controls only. These never capture the pointer, so their native click is
+    // reliable (the bug the drag layer used to cause).
     wrap.addEventListener('click', function (e) {
-      if (moved) { moved = false; return; }          // that was a pan, not a click
-      if (e.target.closest('.erlegend')) return;
       var z = e.target.closest('[data-dbz]');
       if (z) {
         var a = z.getAttribute('data-dbz'), r = wrap.getBoundingClientRect();
@@ -1428,11 +1473,7 @@
         var nm = tog.getAttribute('data-dbtog');
         if (v.collapsed[nm]) delete v.collapsed[nm]; else v.collapsed[nm] = 1;
         render();
-        return;
       }
-      var c = e.target.closest('[data-dbsel]'), name = c && c.getAttribute('data-dbsel');
-      v.sel = name === v.sel ? null : name;          // click the canvas (or the same card) to clear
-      render();
     });
   }
 
