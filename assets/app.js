@@ -51,9 +51,9 @@
   var IX = {};
   function rebuild() {
     IX.clientsById = index(DB.clients);
-    IX.conversationsById = index(DB.conversations);
-    IX.personasById = index(DB.personas);
-    IX.replicasById = index(DB.replicas);
+    IX.conversationsById = index(DB.conversations, 'conversation_id');
+    IX.personasById = index(DB.personas, 'pal_id');
+    IX.replicasById = index(DB.replicas, 'face_id');
     IX.usersById = index(DB.users);
     // FK targets reachable by clicking a link in the record panel (persona → voice /
     // pronunciation, conversation → deployment) need an index so the panel can resolve them.
@@ -77,7 +77,7 @@
       if (!p.client_id) return;
       var ct = IX.clientTotals[p.client_id]; if (!ct) return;
       ct.personas += 1;
-      var t = IX.personaTotals[p.id] || { minutes: 0, convos: 0 };
+      var t = IX.personaTotals[p.pal_id] || { minutes: 0, convos: 0 };
       ct.minutes += t.minutes; ct.convos += t.convos;
     });
 
@@ -91,7 +91,7 @@
       if (e.amount >= 0) b.allocated += e.amount; else b.used += -e.amount;
     });
   }
-  function index(arr) { var m = {}; (arr || []).forEach(function (x) { m[x.id] = x; }); return m; }
+  function index(arr, key) { key = key || 'id'; var m = {}; (arr || []).forEach(function (x) { m[x[key]] = x; }); return m; }
 
   function clientRemaining(cid) { var b = IX.clientBudget[cid] || { allocated: 0, used: 0 }; return b.allocated - b.used; }
   function clientPctUsed(cid) { var b = IX.clientBudget[cid] || { allocated: 0, used: 0 }; return b.allocated ? Math.round(b.used / b.allocated * 100) : 0; }
@@ -201,7 +201,7 @@
     }).join('');
   }
   function statusPill(s) {
-    var k = { active: '', assigned: '', ready: '', healthy: '', success: '', paused: 'off', unassigned: 'off', training: 'pend', invited: 'pend', reconciled: 'info', disabled: 'err' };
+    var k = { active: '', assigned: '', completed: '', healthy: '', success: '', paused: 'off', unassigned: 'off', training: 'pend', invited: 'pend', reconciled: 'info', disabled: 'err' };
     var cls = k[s] == null ? '' : k[s];
     return '<span class="pill ' + cls + '"><span class="gd"></span>' + s.charAt(0).toUpperCase() + s.slice(1) + '</span>';
   }
@@ -217,8 +217,8 @@
   var CONV_SORT = {
     started_at: function (c) { return Date.parse(c.started_at); },
     duration_seconds: function (c) { return c.duration_seconds; },
-    turns: function (c) { return DB.transcripts[c.id] ? DB.transcripts[c.id].turns.length : 0; },
-    persona: function (c) { var p = IX.personasById[c.persona_id]; return p ? p.name.toLowerCase() : ''; },
+    turns: function (c) { return DB.transcripts[c.conversation_id] ? DB.transcripts[c.conversation_id].turns.length : 0; },
+    persona: function (c) { var p = IX.personasById[c.persona_id]; return p ? p.pal_name.toLowerCase() : ''; },
     client: function (c) { return clientOf(c) ? clientOf(c).name.toLowerCase() : ''; },
     end_user_ref: function (c) { return c.end_user_ref || ''; }
   };
@@ -228,7 +228,7 @@
     var q = state.convFilter.trim().toLowerCase();
     if (q) list = list.filter(function (c) {
       var p = IX.personasById[c.persona_id], cl = clientOf(c), r = c.replica_id ? IX.replicasById[c.replica_id] : null;
-      return [c.tavus_conversation_id, c.end_user_ref, p && p.name, cl && cl.name, r && r.name, fmtDateTime(c.started_at)]
+      return [c.conversation_id, c.end_user_ref, p && p.pal_name, cl && cl.name, r && r.face_name, fmtDateTime(c.started_at)]
         .join(' ').toLowerCase().indexOf(q) >= 0;
     });
     var s = state.convSort, get = CONV_SORT[s.key] || CONV_SORT.started_at;
@@ -275,13 +275,13 @@
         });
       } },
     { id: 'persona_breakdown', name: 'Persona breakdown', scope: 'All personas', period: 'Last 14 days',
-      headers: ['Persona', 'Tavus persona ID', 'Client', 'Replica', 'Conversations', 'Minutes'],
+      headers: ['Persona', 'Pal ID', 'Client', 'Replica', 'Conversations', 'Minutes'],
       build: function () {
         return DB.personas.map(function (p) {
-          var t = IX.personaTotals[p.id] || { minutes: 0, convos: 0 };
-          var r = p.replica_id ? IX.replicasById[p.replica_id] : null;
-          return [p.name, p.tavus_persona_id, p.client_id ? IX.clientsById[p.client_id].name : 'Unassigned',
-            r ? r.name : '—', t.convos, t.minutes];
+          var t = IX.personaTotals[p.pal_id] || { minutes: 0, convos: 0 };
+          var r = p.default_face_id ? IX.replicasById[p.default_face_id] : null;
+          return [p.pal_name, p.pal_id, p.client_id ? IX.clientsById[p.client_id].name : 'Unassigned',
+            r ? r.face_name : '—', t.convos, t.minutes];
         });
       } },
     { id: 'daily_usage', name: 'Daily usage rollup', scope: 'All clients', period: 'Day by day',
@@ -289,7 +289,7 @@
       build: function () {
         return DB.usage_daily.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; }).map(function (r) {
           var p = IX.personasById[r.persona_id], c = IX.clientsById[r.client_id];
-          return [r.date, c ? c.name : r.client_id, p ? p.name : r.persona_id, r.conversations, r.minutes];
+          return [r.date, c ? c.name : r.client_id, p ? p.pal_name : r.persona_id, r.conversations, r.minutes];
         });
       } },
     { id: 'conversation_log', name: 'Conversation log', scope: 'All clients', period: 'Stored sessions',
@@ -297,8 +297,8 @@
       build: function () {
         return DB.conversations.slice().sort(function (a, b) { return Date.parse(b.started_at) - Date.parse(a.started_at); }).map(function (c) {
           var p = IX.personasById[c.persona_id], cl = clientOf(c), r = c.replica_id ? IX.replicasById[c.replica_id] : null;
-          return [c.started_at, cl ? cl.name : 'Unassigned', p ? p.name : c.persona_id, r ? r.name : '—',
-            c.duration_seconds, DB.transcripts[c.id] ? DB.transcripts[c.id].turns.length : 0, c.end_user_ref];
+          return [c.started_at, cl ? cl.name : 'Unassigned', p ? p.pal_name : c.persona_id, r ? r.face_name : '—',
+            c.duration_seconds, DB.transcripts[c.conversation_id] ? DB.transcripts[c.conversation_id].turns.length : 0, c.end_user_ref];
         });
       } },
     { id: 'minute_ledger', name: 'Minute ledger', scope: 'All clients', period: 'Full history',
@@ -427,10 +427,10 @@
     if (state.overlay === 'assign') {
       var pool = DB.personas.filter(function (p) { return !p.client_id; });
       var rows = pool.length ? pool.map(function (p) {
-        var on = state.assignSel[p.id] ? ' on' : '';
-        return '<div class="ckrow" data-assign-toggle="' + p.id + '"><span class="ck' + on + '"></span><b>' + esc(p.name) + '</b>' +
+        var on = state.assignSel[p.pal_id] ? ' on' : '';
+        return '<div class="ckrow" data-assign-toggle="' + p.pal_id + '"><span class="ck' + on + '"></span><b>' + esc(p.pal_name) + '</b>' +
           '<span class="pill off"><span class="gd"></span>Unassigned</span>' +
-          (p.replica_id ? '<span class="note" style="margin-left:auto">face: ' + esc(IX.replicasById[p.replica_id].name) + '</span>' : '') + '</div>';
+          (p.default_face_id ? '<span class="note" style="margin-left:auto">face: ' + esc(IX.replicasById[p.default_face_id].face_name) + '</span>' : '') + '</div>';
       }).join('') : '<div class="empty"><b>Pool is empty</b>every synced persona is already assigned to a client</div>';
       var count = Object.keys(state.assignSel).filter(function (k) { return state.assignSel[k]; }).length;
       html += '<div class="ov" data-close-ov><div class="modal">' +
@@ -445,9 +445,9 @@
   }
 
   function transcriptDrawer(cid) {
-    var conv = DB.conversations.filter(function (c) { return c.id === cid; })[0];
+    var conv = DB.conversations.filter(function (c) { return c.conversation_id === cid; })[0];
     if (!conv) return '';
-    var persona = IX.personasById[conv.persona_id], replica = persona && persona.replica_id ? IX.replicasById[persona.replica_id] : null;
+    var persona = IX.personasById[conv.persona_id], replica = persona && persona.default_face_id ? IX.replicasById[persona.default_face_id] : null;
     var client = persona && persona.client_id ? IX.clientsById[persona.client_id] : null;
     var tr = DB.transcripts[cid];
     var lines = tr ? tr.turns.map(function (t) {
@@ -455,8 +455,8 @@
     }).join('')
       : '<div class="empty"><b>No transcript stored</b>this session predates transcript capture</div>';
     return '<div class="drawer">' +
-      '<div class="drawer-head">' + avatar(persona ? persona.name : '?') +
-      '<div><b>' + esc(persona ? persona.name : '—') + '</b> · ' + esc(replica ? replica.name : '—') +
+      '<div class="drawer-head">' + avatar(persona ? persona.pal_name : '?') +
+      '<div><b>' + esc(persona ? persona.pal_name : '—') + '</b> · ' + esc(replica ? replica.face_name : '—') +
       '<div class="note">' + esc(client ? client.name : 'Unassigned') + ' · ' + esc(conv.end_user_ref) + '</div></div>' +
       '<span class="x" data-close>✕</span></div>' +
       '<div class="metarow">' +
@@ -582,7 +582,7 @@
 
     var usage = DB.clients.map(function (c) { return { label: c.name, value: (byClient[c.id] || { minutes: 0 }).minutes }; }).sort(function (a, b) { return b.value - a.value; });
     var tops = DB.personas.filter(function (p) { return p.client_id; })
-      .map(function (p) { var t = byPersona[p.id] || { minutes: 0, convos: 0 }; return { p: p, m: t.minutes, c: t.convos }; })
+      .map(function (p) { var t = byPersona[p.pal_id] || { minutes: 0, convos: 0 }; return { p: p, m: t.minutes, c: t.convos }; })
       .sort(function (a, b) { return b.m - a.m; }).slice(0, 5);
 
     return { days: days, totalMin: totalMin, totalConv: totalConv, assigned: assigned, unassigned: unassigned,
@@ -639,7 +639,7 @@
       rows(['Client', 'Minutes'], d.usage.map(function (u) { return [u.label, nf(u.value)]; })) +
       '\n\n## Top personas\n\n' +
       rows(['Persona', 'Client', 'Conversations', 'Minutes'], d.tops.map(function (r) {
-        return [r.p.name, IX.clientsById[r.p.client_id].name, nf(r.c), nf(r.m)];
+        return [r.p.pal_name, IX.clientsById[r.p.client_id].name, nf(r.c), nf(r.m)];
       })) + '\n';
   }
   function overviewWordHtml(d) {
@@ -657,7 +657,7 @@
       ]) +
       '<h2>Usage by client</h2>' + table(['Client', 'Minutes'], d.usage.map(function (u) { return [u.label, nf(u.value)]; })) +
       '<h2>Top personas</h2>' + table(['Persona', 'Client', 'Conversations', 'Minutes'], d.tops.map(function (r) {
-        return [r.p.name, IX.clientsById[r.p.client_id].name, nf(r.c), nf(r.m)];
+        return [r.p.pal_name, IX.clientsById[r.p.client_id].name, nf(r.c), nf(r.m)];
       })) +
       '</body></html>';
   }
@@ -674,7 +674,7 @@
         ['Minutes remaining', d.remaining]
       ]) + '\r\n\r\n' + toCsv(['Client', 'Minutes'], d.usage.map(function (u) { return [u.label, u.value]; })) +
         '\r\n\r\n' + toCsv(['Persona', 'Client', 'Conversations', 'Minutes'], d.tops.map(function (r) {
-          return [r.p.name, IX.clientsById[r.p.client_id].name, r.c, r.m];
+          return [r.p.pal_name, IX.clientsById[r.p.client_id].name, r.c, r.m];
         }));
       downloadFile('overview.csv', text, 'text/csv');
       toast('Overview exported as overview.csv');
@@ -690,7 +690,7 @@
   function scrOverview() {
     var d = overviewStats(state.ovPeriod || 14);
     var tops = d.tops.map(function (r) {
-      return '<tr class="rowlink" data-nav="#/persona/' + r.p.id + '"><td><div class="cellpersona">' + avatar(r.p.name, 'sm') + '<b>' + esc(r.p.name) + '</b></div></td>' +
+      return '<tr class="rowlink" data-nav="#/persona/' + r.p.pal_id + '"><td><div class="cellpersona">' + avatar(r.p.pal_name, 'sm') + '<b>' + esc(r.p.pal_name) + '</b></div></td>' +
         '<td>' + esc(IX.clientsById[r.p.client_id].name) + '</td><td class="num">' + nf(r.c) + '</td><td class="num"><b>' + nf(r.m) + '</b></td>' +
         '<td class="num chev">›</td></tr>';
     }).join('');
@@ -763,7 +763,7 @@
         '<div class="g2 eq">' +
         '<div class="card"><div class="cardh">Usage by persona<span class="hsub">minutes this period</span></div><div class="cardp" style="display:flex;flex-direction:column;gap:12px">' +
         barRows(DB.personas.filter(function (p) { return p.client_id === cid; })
-          .map(function (p) { return { label: p.name, value: (IX.personaTotals[p.id] || { minutes: 0 }).minutes }; })
+          .map(function (p) { return { label: p.pal_name, value: (IX.personaTotals[p.pal_id] || { minutes: 0 }).minutes }; })
           .sort(function (a, b) { return b.value - a.value; })) + '</div></div>' +
         '<div class="card"><div class="cardh">Daily usage<span class="hsub">every recorded day</span></div><div class="tscroll" style="max-height:300px">' +
         '<table class="tbl"><tr><th>Date</th><th class="num">Conversations</th><th class="num">Minutes</th></tr>' +
@@ -780,15 +780,15 @@
     } else {
       var assigned = DB.personas.filter(function (p) { return p.client_id === cid; });
       var arows = assigned.length ? assigned.map(function (p) {
-        var t = IX.personaTotals[p.id] || { minutes: 0, convos: 0 }, r = p.replica_id ? IX.replicasById[p.replica_id] : null;
-        var sessions = DB.conversations.filter(function (x) { return x.persona_id === p.id; }).length;
+        var t = IX.personaTotals[p.pal_id] || { minutes: 0, convos: 0 }, r = p.default_face_id ? IX.replicasById[p.default_face_id] : null;
+        var sessions = DB.conversations.filter(function (x) { return x.persona_id === p.pal_id; }).length;
         // row opens the persona (usage trend, config, sessions + transcripts); the Unassign
         // button sits inside the row but matches its own handler first, so it doesn't navigate
-        return '<tr class="rowlink" data-nav="#/persona/' + p.id + '"><td><div class="cellpersona">' + avatar(p.name, 'sm') +
-          '<span><b>' + esc(p.name) + '</b><span class="sub mono">' + esc(p.tavus_persona_id) + '</span></span></div></td>' +
-          '<td>' + esc(r ? r.name : '—') + '</td><td class="num">' + nf(t.convos) + '</td><td class="num"><b>' + nf(t.minutes) + '</b></td>' +
+        return '<tr class="rowlink" data-nav="#/persona/' + p.pal_id + '"><td><div class="cellpersona">' + avatar(p.pal_name, 'sm') +
+          '<span><b>' + esc(p.pal_name) + '</b><span class="sub mono">' + esc(p.pal_id) + '</span></span></div></td>' +
+          '<td>' + esc(r ? r.face_name : '—') + '</td><td class="num">' + nf(t.convos) + '</td><td class="num"><b>' + nf(t.minutes) + '</b></td>' +
           '<td class="num">' + sessions + '</td>' +
-          '<td class="num">' + (canProvision() ? '<span class="btn sm" data-unassign="' + p.id + '">Unassign</span>' : '') + '</td>' +
+          '<td class="num">' + (canProvision() ? '<span class="btn sm" data-unassign="' + p.pal_id + '">Unassign</span>' : '') + '</td>' +
           '<td class="num chev">›</td></tr>';
       }).join('') : emptyRow(7, 'No personas assigned yet', canProvision() ? 'use “+ Assign” to pull one from the unassigned pool' : 'an internal admin assigns personas to this client');
       body = '<div class="card"><div class="cardh">Assigned personas<span class="hsub">row → usage, config &amp; transcripts</span>' + (canProvision() ? '<div class="r"><span class="btnp sm" data-assign="' + cid + '">+ Assign</span></div>' : '') + '</div>' +
@@ -804,11 +804,11 @@
     var f = state.personaFilter;
     var list = DB.personas.filter(function (p) { return f === 'all' ? true : f === 'assigned' ? !!p.client_id : !p.client_id; });
     var rows = list.length ? list.map(function (p) {
-      var t = IX.personaTotals[p.id] || { minutes: 0, convos: 0 }, r = p.replica_id ? IX.replicasById[p.replica_id] : null;
+      var t = IX.personaTotals[p.pal_id] || { minutes: 0, convos: 0 }, r = p.default_face_id ? IX.replicasById[p.default_face_id] : null;
       var client = p.client_id ? esc(IX.clientsById[p.client_id].name) : '<span class="pill off"><span class="gd"></span>Unassigned</span>';
-      return '<tr class="rowlink" data-nav="#/persona/' + p.id + '"><td><div class="cellpersona">' + avatar(p.name, 'sm') +
-        '<span><b>' + esc(p.name) + '</b><span class="sub mono">' + esc(p.tavus_persona_id) + '</span></span></div></td>' +
-        '<td>' + esc(r ? r.name : '—') + '</td><td>' + client +
+      return '<tr class="rowlink" data-nav="#/persona/' + p.pal_id + '"><td><div class="cellpersona">' + avatar(p.pal_name, 'sm') +
+        '<span><b>' + esc(p.pal_name) + '</b><span class="sub mono">' + esc(p.pal_id) + '</span></span></div></td>' +
+        '<td>' + esc(r ? r.face_name : '—') + '</td><td>' + client +
         '</td><td class="num">' + (p.client_id ? nf(t.convos) : '—') + '</td><td class="num"><b>' + (p.client_id ? nf(t.minutes) : '—') + '</b></td>' +
         '<td class="note">' + ago(p.last_synced_at) + '</td><td class="num chev">›</td></tr>';
     }).join('') : emptyRow(7, 'Nothing here', 'no personas match this filter');
@@ -821,14 +821,14 @@
   function scrPersonaDetail(pid) {
     var p = IX.personasById[pid]; if (!p) return scrPersonas();
     var t = IX.personaTotals[pid] || { minutes: 0, convos: 0 };
-    var r = p.replica_id ? IX.replicasById[p.replica_id] : null;
+    var r = p.default_face_id ? IX.replicasById[p.default_face_id] : null;
     var client = p.client_id ? IX.clientsById[p.client_id] : null;
     var s = seriesForPersona(pid);
     var crumb = isClientView()
-      ? '<div class="crumb"><a data-nav="#/c/personas">Your personas</a> / ' + esc(p.name) + '</div>'
+      ? '<div class="crumb"><a data-nav="#/c/personas">Your personas</a> / ' + esc(p.pal_name) + '</div>'
       : (client
-        ? '<div class="crumb"><a data-nav="#/clients">Clients</a> / <a data-nav="#/client/' + client.id + '">' + esc(client.name) + '</a> / ' + esc(p.name) + '</div>'
-        : '<div class="crumb"><a data-nav="#/personas">Personas</a> / ' + esc(p.name) + '</div>');
+        ? '<div class="crumb"><a data-nav="#/clients">Clients</a> / <a data-nav="#/client/' + client.id + '">' + esc(client.name) + '</a> / ' + esc(p.pal_name) + '</div>'
+        : '<div class="crumb"><a data-nav="#/personas">Personas</a> / ' + esc(p.pal_name) + '</div>');
 
     var all = DB.conversations.filter(function (c) { return c.persona_id === pid; });
     var tab = function (id, label, n) {
@@ -844,13 +844,12 @@
     } else if (state.personaTab === 'config') {
       body = '<div class="g2 eq">' +
         '<div class="card"><div class="cardh">Configuration<span class="hsub">synced from Tavus</span></div><div class="cardp kv">' +
-        '<span class="k">Persona ID</span><span class="v mono">' + esc(p.id) + '</span>' +
-        '<span class="k">Tavus persona ID</span><span class="v mono">' + esc(p.tavus_persona_id) + '</span>' +
+        '<span class="k">Pal ID</span><span class="v mono">' + esc(p.pal_id) + '</span>' +
+        '<span class="k">Published</span><span class="v">' + (p.is_published ? 'Yes' : 'No') + '</span>' +
         '<span class="k">Owner (client_id)</span><span class="v">' + (client ? '<a class="lnk" data-nav="#/client/' + client.id + '">' + esc(client.name) + '</a> <span class="mono keyref">' + esc(client.id) + '</span>' : 'Unassigned') + '</span>' +
-        '<span class="k">Replica (replica_id)</span><span class="v">' + (r ? '<a class="lnk" data-nav="#/replica/' + r.id + '">' + esc(r.name) + '</a> <span class="mono keyref">' + esc(r.id) + '</span>' : '—') + '</span>' +
+        '<span class="k">Replica (default_face_id)</span><span class="v">' + (r ? '<a class="lnk" data-nav="#/replica/' + r.face_id + '">' + esc(r.face_name) + '</a> <span class="mono keyref">' + esc(r.face_id) + '</span>' : '—') + '</span>' +
         '<span class="k">Created</span><span class="v">' + fmtDateTime(p.created_at) + '</span>' +
         '<span class="k">Last synced</span><span class="v">' + ago(p.last_synced_at) + '</span>' +
-        '<span class="k">Tags</span><span class="v">' + ((p.context_tags || []).map(function (x) { return '<span class="pill off">' + esc(x) + '</span>'; }).join(' ') || '—') + '</span>' +
         '</div></div>' +
         '<div class="card"><div class="cardh">System prompt</div><div class="cardp"><div class="prompt">' + esc(p.system_prompt) + '</div></div></div></div>';
     } else {
@@ -864,14 +863,14 @@
         '<div class="stat"><div class="l">Conversations</div><div class="n">' + nf(t.convos) + '</div><div class="s">' + all.length + ' stored sessions</div></div>' +
         '<div class="stat"><div class="l">Avg session</div><div class="n">' + (t.convos ? (t.minutes / t.convos).toFixed(1) : '0') + '<small>min</small></div><div class="s">across the period</div></div>' +
         '<div class="stat"><div class="l">Busiest day</div><div class="n" style="font-size:21px">' + (peak ? fmtDate(peak.date) : '—') + '</div><div class="s">' + (peak ? nf(peak.minutes) + ' minutes' : 'no usage yet') + '</div></div></div>' +
-        '<div class="card"><div class="cardh">Minutes over time<span class="hsub">' + esc(p.name) + '</span></div><div class="cardp">' + areaChart(s.values, s.dates, 210) + '</div></div>' +
+        '<div class="card"><div class="cardh">Minutes over time<span class="hsub">' + esc(p.pal_name) + '</span></div><div class="cardp">' + areaChart(s.values, s.dates, 210) + '</div></div>' +
         '<div class="card"><div class="cardh">Daily usage<span class="hsub">the rows behind the totals</span></div>' +
         '<div class="tscroll"><table class="tbl"><tr><th>Date</th><th class="num">Conversations</th><th class="num">Minutes</th><th class="num">Avg min / convo</th></tr>' + daily + '</table></div></div>';
     }
 
     var content = crumb +
-      '<div class="ph"><div class="cellpersona">' + avatar(p.name, 'lg') + '<div><h1>' + esc(p.name) + '</h1><span class="sub mono">' + esc(p.tavus_persona_id) + '</span></div></div>' +
-      '<div class="r">' + (r ? '<span class="btn" data-nav="#/replica/' + r.id + '">Face: ' + esc(r.name) + '</span>' : '') +
+      '<div class="ph"><div class="cellpersona">' + avatar(p.pal_name, 'lg') + '<div><h1>' + esc(p.pal_name) + '</h1><span class="sub mono">' + esc(p.pal_id) + '</span></div></div>' +
+      '<div class="r">' + (r ? '<span class="btn" data-nav="#/replica/' + r.face_id + '">Face: ' + esc(r.face_name) + '</span>' : '') +
       (client ? statusPill('assigned') : '<span class="pill off"><span class="gd"></span>Unassigned</span>') + '</div></div>' +
       '<div class="tabs">' + tab('analytics', 'Analytics') + tab('conversations', 'Conversations', all.length) + tab('config', 'Configuration') + '</div>' + body;
     return shell(isClientView() ? '#/c/personas' : '#/personas', content);
@@ -897,22 +896,22 @@
     var lastDay = null;
     var body = rows.map(function (c) {
       var p = IX.personasById[c.persona_id], cl = clientOf(c), rp = c.replica_id ? IX.replicasById[c.replica_id] : null;
-      var turns = DB.transcripts[c.id] ? DB.transcripts[c.id].turns.length : 0;
+      var turns = DB.transcripts[c.conversation_id] ? DB.transcripts[c.conversation_id].turns.length : 0;
       var sep = '';
       if (groupByDay) {
         var key = dayKey(c.started_at);
         if (key !== lastDay) { sep = '<tr class="daysep"><td colspan="' + colCount + '">' + dayLabel(c.started_at) + '</td></tr>'; lastDay = key; }
       }
-      return sep + '<tr class="rowlink" data-view="' + c.id + '">' +
+      return sep + '<tr class="rowlink" data-view="' + c.conversation_id + '">' +
         '<td><div class="convtime"><b>' + fmtTime(c.started_at) + '</b><span class="ago">' + ago(c.started_at) + '</span></div>' +
-        '<span class="sub mono">' + esc(c.tavus_conversation_id) + '</span></td>' +
+        '<span class="sub mono">' + esc(c.conversation_id) + '</span></td>' +
         (want.client ? '<td>' + (cl ? esc(cl.name) : '<span class="pill off"><span class="gd"></span>Unassigned</span>') + '</td>' : '') +
-        (want.persona ? '<td><div class="cellpersona">' + avatar(p ? p.name : '?', 'sm') + esc(p ? p.name : '—') + '</div></td>' : '') +
-        (want.replica ? '<td>' + esc(rp ? rp.name : '—') + '</td>' : '') +
+        (want.persona ? '<td><div class="cellpersona">' + avatar(p ? p.pal_name : '?', 'sm') + esc(p ? p.pal_name : '—') + '</div></td>' : '') +
+        (want.replica ? '<td>' + esc(rp ? rp.face_name : '—') + '</td>' : '') +
         (want.end_user ? '<td class="mono">' + esc(c.end_user_ref) + '</td>' : '') +
         (want.duration ? '<td class="num">' + fmtDur(c.duration_seconds) + '</td>' : '') +
         (want.turns ? '<td class="num">' + (turns ? turns + ' turns' : '—') + '</td>' : '') +
-        '<td class="num">' + (c.has_transcript ? '<span class="btn sm" data-view="' + c.id + '">Transcript</span>' : '<span class="pill off"><span class="gd"></span>None</span>') + '</td></tr>';
+        '<td class="num">' + (c.has_transcript ? '<span class="btn sm" data-view="' + c.conversation_id + '">Transcript</span>' : '<span class="pill off"><span class="gd"></span>None</span>') + '</td></tr>';
     }).join('') || emptyRow(colCount, state.convFilter ? 'Nothing matches that filter' : 'No conversations yet',
       state.convFilter ? 'try a different term, or clear the filter' : 'sessions appear here as the sync pulls them in');
     return '<div class="card"><div class="cardh">Conversations<span class="hsub">' + esc(opt.of || '') + ' · click a column to sort · row → full chat</span></div>' +
@@ -923,12 +922,12 @@
   function scrReplicaDetail(rid) {
     var rp = IX.replicasById[rid]; if (!rp) return scrReplicas();
     var client = rp.client_id ? IX.clientsById[rp.client_id] : null;
-    var users = DB.personas.filter(function (p) { return p.replica_id === rid; });
+    var users = DB.personas.filter(function (p) { return p.default_face_id === rid; });
     var convs = DB.conversations.filter(function (c) { return c.replica_id === rid; });
     var mins = 0, cvs = 0;
-    users.forEach(function (p) { var t = IX.personaTotals[p.id] || { minutes: 0, convos: 0 }; mins += t.minutes; cvs += t.convos; });
+    users.forEach(function (p) { var t = IX.personaTotals[p.pal_id] || { minutes: 0, convos: 0 }; mins += t.minutes; cvs += t.convos; });
     var s = seriesFrom(DB.usage_daily.filter(function (u) {
-      return users.some(function (p) { return p.id === u.persona_id; });
+      return users.some(function (p) { return p.pal_id === u.persona_id; });
     }));
     var tab = function (id, label, n) {
       return '<a class="' + (state.replicaTab === id ? 'on' : '') + '" data-rtab="' + id + '">' + label +
@@ -938,13 +937,13 @@
     var body;
     if (state.replicaTab === 'personas') {
       var prows = users.map(function (p) {
-        var t = IX.personaTotals[p.id] || { minutes: 0, convos: 0 };
-        return '<tr class="rowlink" data-nav="#/persona/' + p.id + '"><td><div class="cellpersona">' + avatar(p.name, 'sm') +
-          '<span><b>' + esc(p.name) + '</b><span class="sub mono">replica_id = ' + esc(rid) + '</span></span></div></td>' +
+        var t = IX.personaTotals[p.pal_id] || { minutes: 0, convos: 0 };
+        return '<tr class="rowlink" data-nav="#/persona/' + p.pal_id + '"><td><div class="cellpersona">' + avatar(p.pal_name, 'sm') +
+          '<span><b>' + esc(p.pal_name) + '</b><span class="sub mono">default_face_id = ' + esc(rid) + '</span></span></div></td>' +
           '<td>' + (p.client_id ? esc(IX.clientsById[p.client_id].name) : '<span class="pill off"><span class="gd"></span>Unassigned</span>') + '</td>' +
           '<td class="num">' + nf(t.convos) + '</td><td class="num"><b>' + nf(t.minutes) + '</b></td><td class="num chev">›</td></tr>';
       }).join('') || emptyRow(5, 'No persona uses this face', 'assign it to a persona to put it to work');
-      body = '<div class="card"><div class="cardh">Personas using this face<span class="hsub">joined on personas.replica_id</span></div>' +
+      body = '<div class="card"><div class="cardh">Personas using this face<span class="hsub">joined on personas.default_face_id</span></div>' +
         '<table class="tbl"><tr><th>Persona (PAL)</th><th>Client</th><th class="num">Conversations</th><th class="num">Minutes</th><th></th></tr>' + prows + '</table></div>';
     } else if (state.replicaTab === 'conversations') {
       body = '<div class="note">Showing ' + convs.length + ' stored session' + (convs.length === 1 ? '' : 's') + ' with full transcripts — not the same as the ' +
@@ -958,18 +957,18 @@
         '<div class="stat"><div class="l">Status</div><div class="n" style="font-size:21px">' + esc(rp.status) + '</div><div class="s">synced ' + ago(rp.last_synced_at) + '</div></div></div>' +
         '<div class="g2 eq"><div class="card"><div class="cardh">Minutes over time<span class="hsub">all personas using this face</span></div><div class="cardp">' + areaChart(s.values, s.dates, 210) + '</div></div>' +
         '<div class="card"><div class="cardh">Record</div><div class="cardp kv">' +
-        '<span class="k">Replica ID</span><span class="v mono">' + esc(rp.id) + '</span>' +
-        '<span class="k">Tavus replica ID</span><span class="v mono">' + esc(rp.tavus_replica_id) + '</span>' +
+        '<span class="k">Face ID</span><span class="v mono">' + esc(rp.face_id) + '</span>' +
+        '<span class="k">Model</span><span class="v mono">' + esc(rp.model_name) + '</span>' +
         '<span class="k">Owner (client_id)</span><span class="v">' + (client ? '<a class="lnk" data-nav="#/client/' + client.id + '">' + esc(client.name) + '</a> <span class="mono keyref">' + esc(client.id) + '</span>' : 'null — unassigned') + '</span>' +
         '<span class="k">Status</span><span class="v">' + statusPill(rp.status) + '</span>' +
         '<span class="k">Last synced</span><span class="v">' + fmtDateTime(rp.last_synced_at) + '</span></div></div></div>';
     }
 
     var crumb = client
-      ? '<div class="crumb"><a data-nav="#/clients">Clients</a> / <a data-nav="#/client/' + client.id + '">' + esc(client.name) + '</a> / ' + esc(rp.name) + '</div>'
-      : '<div class="crumb"><a data-nav="#/replicas">Replicas</a> / ' + esc(rp.name) + '</div>';
+      ? '<div class="crumb"><a data-nav="#/clients">Clients</a> / <a data-nav="#/client/' + client.id + '">' + esc(client.name) + '</a> / ' + esc(rp.face_name) + '</div>'
+      : '<div class="crumb"><a data-nav="#/replicas">Replicas</a> / ' + esc(rp.face_name) + '</div>';
     var content = crumb +
-      '<div class="ph"><div class="cellpersona">' + avatar(rp.name, 'lg') + '<div><h1>' + esc(rp.name) + '</h1><span class="sub mono">' + esc(rp.tavus_replica_id) + '</span></div></div>' +
+      '<div class="ph"><div class="cellpersona">' + avatar(rp.face_name, 'lg') + '<div><h1>' + esc(rp.face_name) + '</h1><span class="sub mono">' + esc(rp.face_id) + '</span></div></div>' +
       '<div class="r">' + statusPill(rp.client_id ? 'assigned' : (rp.status === 'training' ? 'training' : 'unassigned')) + '</div></div>' +
       '<div class="tabs">' + tab('overview', 'Overview') + tab('personas', 'Personas', users.length) + tab('conversations', 'Conversations', convs.length) + '</div>' + body;
     return shell('#/replicas', content);
@@ -977,9 +976,9 @@
 
   function scrReplicas() {
     var rows = DB.replicas.map(function (rp) {
-      var usedBy = DB.personas.filter(function (p) { return p.replica_id === rp.id; }).map(function (p) { return p.name; });
+      var usedBy = DB.personas.filter(function (p) { return p.default_face_id === rp.face_id; }).map(function (p) { return p.pal_name; });
       var client = rp.client_id ? esc(IX.clientsById[rp.client_id].name) : '<span class="pill off"><span class="gd"></span>Unassigned</span>';
-      return '<tr class="rowlink" data-nav="#/replica/' + rp.id + '"><td><div class="cellpersona">' + avatar(rp.name, 'sm') + '<span><b>' + esc(rp.name) + '</b><span class="sub mono">' + esc(rp.tavus_replica_id) + '</span></span></div></td>' +
+      return '<tr class="rowlink" data-nav="#/replica/' + rp.face_id + '"><td><div class="cellpersona">' + avatar(rp.face_name, 'sm') + '<span><b>' + esc(rp.face_name) + '</b><span class="sub mono">' + esc(rp.face_id) + '</span></span></div></td>' +
         '<td>' + (usedBy.length ? esc(usedBy.join(', ')) : '—') + '</td><td>' + client + '</td>' +
         '<td>' + statusPill(rp.client_id ? 'assigned' : (rp.status === 'training' ? 'training' : 'unassigned')) + '</td><td class="note">' + ago(rp.last_synced_at) + '</td>' +
         '<td class="num chev">›</td></tr>';
@@ -1051,7 +1050,7 @@
     var c = IX.clientsById[cid], b = IX.clientBudget[cid], tot = IX.clientTotals[cid];
     var s = seriesForClient(cid), pct = clientPctUsed(cid);
     var byPersona = DB.personas.filter(function (p) { return p.client_id === cid; })
-      .map(function (p) { return { label: p.name, value: (IX.personaTotals[p.id] || { minutes: 0 }).minutes }; })
+      .map(function (p) { return { label: p.pal_name, value: (IX.personaTotals[p.pal_id] || { minutes: 0 }).minutes }; })
       .sort(function (a, b) { return b.value - a.value; });
     var content = ph('Dashboard', esc(c.name), '<span class="sel">Last 14 days</span>') + scopeBanner(c) +
       '<div class="g3">' +
@@ -1086,9 +1085,9 @@
   function scrCPersonas(cid) {
     var mine = DB.personas.filter(function (p) { return p.client_id === cid; });
     var cards = mine.length ? mine.map(function (p) {
-      var t = IX.personaTotals[p.id] || { minutes: 0, convos: 0 }, r = p.replica_id ? IX.replicasById[p.replica_id] : null, s = seriesForPersona(p.id);
-      return '<div class="card cardp rowlink" data-nav="#/persona/' + p.id + '" style="display:flex;flex-direction:column;gap:13px;cursor:pointer">' +
-        '<div style="display:flex;align-items:center;gap:12px">' + avatar(p.name, 'lg') + '<div><b>' + esc(p.name) + '</b><div class="note">Face: ' + esc(r ? r.name : '—') + '</div></div></div>' +
+      var t = IX.personaTotals[p.pal_id] || { minutes: 0, convos: 0 }, r = p.default_face_id ? IX.replicasById[p.default_face_id] : null, s = seriesForPersona(p.pal_id);
+      return '<div class="card cardp rowlink" data-nav="#/persona/' + p.pal_id + '" style="display:flex;flex-direction:column;gap:13px;cursor:pointer">' +
+        '<div style="display:flex;align-items:center;gap:12px">' + avatar(p.pal_name, 'lg') + '<div><b>' + esc(p.pal_name) + '</b><div class="note">Face: ' + esc(r ? r.face_name : '—') + '</div></div></div>' +
         '<div style="display:flex;gap:20px;font-size:12.5px;color:var(--muted)"><span><b style="color:var(--ink)">' + nf(t.convos) + '</b> convos</span><span><b style="color:var(--ink)">' + nf(t.minutes) + '</b> min</span></div>' +
         sparkline(s.values, 52) + '</div>';
     }).join('') : '<div class="card cardp"><div class="empty"><b>No personas assigned yet</b>your Tevus admin assigns personas to your organisation</div></div>';
@@ -1175,7 +1174,7 @@
     // ── Layer B · client-scoped assets & catalogs (synced from Tavus) ───────
     { name: 'users', pk: ['id'], fk: { client_id: 'clients' }, x: 430, y: 40,
       note: 'login · null client = internal team', rows: function () { return DB.users; } },
-    { name: 'replicas', pk: ['id'], fk: { client_id: 'clients' }, x: 430, y: 360,
+    { name: 'replicas', pk: ['face_id'], fk: { client_id: 'clients' }, x: 430, y: 360,
       note: 'face, synced from Tavus', rows: function () { return DB.replicas; } },
     { name: 'voices', pk: ['id'], fk: { client_id: 'clients' }, x: 430, y: 650,
       note: 'TTS voice · null client = Tavus stock', rows: function () { return DB.voices; } },
@@ -1189,8 +1188,8 @@
       note: 'append-only — balance is derived', rows: function () { return DB.minute_ledger; } },
 
     // ── Layer C · the PAL, plus the standalone pipeline monitor ─────────────
-    { name: 'personas', pk: ['id'],
-      fk: { client_id: 'clients', replica_id: 'replicas', voice_id: 'voices', pronunciation_id: 'pronunciation_dictionaries' },
+    { name: 'personas', pk: ['pal_id'],
+      fk: { client_id: 'clients', default_face_id: 'replicas', voice_id: 'voices', pronunciation_id: 'pronunciation_dictionaries' },
       x: 820, y: 560, note: 'PAL · null client = unassigned', rows: function () { return DB.personas; } },
     { name: 'sync_status', pk: [], fk: {}, x: 820, y: 1620, singleton: true,
       note: 'pipeline health · stands alone', rows: function () { return [DB.sync_status]; } },
@@ -1208,7 +1207,7 @@
       note: 'attach · which tools this PAL uses', rows: function () { return DB.persona_tools; } },
     { name: 'persona_skills', pk: ['id'], fk: { persona_id: 'personas', skill_id: 'skills' }, x: 1210, y: 1300,
       note: 'attach · which skills this PAL uses', rows: function () { return DB.persona_skills; } },
-    { name: 'conversations', pk: ['id'], fk: { persona_id: 'personas', deployment_id: 'deployments', replica_id: 'replicas' }, x: 1210, y: 1520,
+    { name: 'conversations', pk: ['conversation_id'], fk: { persona_id: 'personas', deployment_id: 'deployments', replica_id: 'replicas' }, x: 1210, y: 1520,
       note: 'session — owner inherited via persona', rows: function () { return DB.conversations; } },
     { name: 'usage_daily', pk: ['client_id', 'persona_id', 'date'], fk: { client_id: 'clients', persona_id: 'personas' },
       x: 1210, y: 1920, note: 'daily rollup · composite key', rows: function () { return DB.usage_daily; } },
@@ -1484,9 +1483,9 @@
 
        Manish Corporation                     clients.id = cli_acme
          └ Sales Assistant                    client_id = cli_acme
-             ├ Rohit                          replica_id = rep_ava
-             └ Jul 21, 14:02                  persona_id = per_sales
-                 └ transcript                 conversation_id = conv_0001
+             ├ Rohit                          default_face_id = r1a2b3c4
+             └ Jul 21, 14:02                  persona_id = p_9x8y7z6
+                 └ transcript                 conversation_id = cvs_0001x
      ========================================================================= */
   var TREE_KIND = {
     client: { table: 'clients', get: function (id) { return IX.clientsById[id]; }, route: function (id) { return '#/client/' + id; } },
@@ -1543,29 +1542,29 @@
         if (!isOpen('pool', '__pool__')) return;
         freeFaces.forEach(function (r) {
           n++;
-          html += treeRow('replica', r.id, esc(r.name), esc(r.status), 'client_id = null', 1, false);
+          html += treeRow('replica', r.face_id, esc(r.face_name), esc(r.status), 'client_id = null', 1, false);
         });
       }
 
       personas.forEach(function (p) {
         n++;
-        var pt = IX.personaTotals[p.id] || { minutes: 0, convos: 0 };
-        var convs = DB.conversations.filter(function (x) { return x.persona_id === p.id; })
+        var pt = IX.personaTotals[p.pal_id] || { minutes: 0, convos: 0 };
+        var convs = DB.conversations.filter(function (x) { return x.persona_id === p.pal_id; })
           .sort(function (a, b) { return Date.parse(b.started_at) - Date.parse(a.started_at); });
-        var face = p.replica_id ? IX.replicasById[p.replica_id] : null;
-        html += treeRow('persona', p.id, esc(p.name), nf(pt.minutes) + ' min · ' + nf(pt.convos) + ' convos',
+        var face = p.default_face_id ? IX.replicasById[p.default_face_id] : null;
+        html += treeRow('persona', p.pal_id, esc(p.pal_name), nf(pt.minutes) + ' min · ' + nf(pt.convos) + ' convos',
           g.c ? 'client_id = ' + esc(p.client_id) : 'client_id = null', 1, !!(face || convs.length));
-        if (!isOpen('persona', p.id)) return;
+        if (!isOpen('persona', p.pal_id)) return;
 
-        if (face) { n++; html += treeRow('replica', face.id, esc(face.name), 'face · ' + esc(face.status), 'replica_id = ' + esc(face.id), 2, false); }
+        if (face) { n++; html += treeRow('replica', face.face_id, esc(face.face_name), 'face · ' + esc(face.status), 'default_face_id = ' + esc(face.face_id), 2, false); }
         convs.forEach(function (c) {
           n++;
-          var tr = DB.transcripts[c.id];
-          html += treeRow('conversation', c.id, fmtDateTime(c.started_at), fmtDur(c.duration_seconds) + ' · ' + esc(c.end_user_ref),
+          var tr = DB.transcripts[c.conversation_id];
+          html += treeRow('conversation', c.conversation_id, fmtDateTime(c.started_at), fmtDur(c.duration_seconds) + ' · ' + esc(c.end_user_ref),
             'persona_id = ' + esc(c.persona_id), 2, !!tr);
-          if (tr && isOpen('conversation', c.id)) {
+          if (tr && isOpen('conversation', c.conversation_id)) {
             n++;
-            html += treeRow('transcript', c.id, 'transcript', tr.turns.length + ' turns', 'conversation_id = ' + esc(c.id), 3, false);
+            html += treeRow('transcript', c.conversation_id, 'transcript', tr.turns.length + ' turns', 'conversation_id = ' + esc(c.conversation_id), 3, false);
           }
         });
       });
@@ -1617,7 +1616,7 @@
         '<span class="note">synced from Tavus</span>');
 
     return '<div class="card"><div class="cardh"><span class="tk k-' + kind + '">' + kind.charAt(0).toUpperCase() + '</span>' +
-      esc(rec.name || id) + '<span class="hsub">' + K.table + '</span><div class="r">' + open + '</div></div>' +
+      esc(rec.name || rec.pal_name || rec.face_name || id) + '<span class="hsub">' + K.table + '</span><div class="r">' + open + '</div></div>' +
       '<div class="tscroll"><table class="tbl rec"><tr><th>Field</th><th class="num">Key</th><th>Value</th></tr>' + fields + '</table></div>' +
       (refs.length ? '<div class="cardp note">referenced by · ' + refs.map(esc).join(' · ') + '</div>' : '') + '</div>';
   }
@@ -1637,14 +1636,14 @@
       var rp = IX.replicasById[id]; if (!rp) return;
       if (!rp.client_id) state.tree.open['pool:__pool__'] = true;
       DB.personas.forEach(function (x) {          // a face sits under every persona that uses it
-        if (x.replica_id === id) { openOwner(x.client_id); state.tree.open['persona:' + x.id] = true; }
+        if (x.default_face_id === id) { openOwner(x.client_id); state.tree.open['persona:' + x.pal_id] = true; }
       });
       return;
     }
     if (kind === 'conversation' || kind === 'transcript') {
       var c = IX.conversationsById[id]; if (!c) return;
       var pp = IX.personasById[c.persona_id];
-      if (pp) { openOwner(pp.client_id); state.tree.open['persona:' + pp.id] = true; }
+      if (pp) { openOwner(pp.client_id); state.tree.open['persona:' + pp.pal_id] = true; }
       if (kind === 'transcript') state.tree.open['conversation:' + id] = true;
     }
   }
@@ -1841,8 +1840,8 @@
       else {
         DB.clients.forEach(function (c) { state.tree.open['client:' + c.id] = true; });
         state.tree.open['pool:__pool__'] = true;
-        DB.personas.forEach(function (p) { state.tree.open['persona:' + p.id] = true; });
-        DB.conversations.forEach(function (c) { state.tree.open['conversation:' + c.id] = true; });
+        DB.personas.forEach(function (p) { state.tree.open['persona:' + p.pal_id] = true; });
+        DB.conversations.forEach(function (c) { state.tree.open['conversation:' + c.conversation_id] = true; });
       }
       render(); return;
     }
@@ -1855,7 +1854,7 @@
         if (!state.assignSel[pid]) return;
         n++;
         IX.personasById[pid].client_id = state.assignFor;
-        var rid = IX.personasById[pid].replica_id;
+        var rid = IX.personasById[pid].default_face_id;
         if (rid && IX.replicasById[rid]) IX.replicasById[rid].client_id = state.assignFor;
       });
       state.overlay = null; state.assignSel = {};
@@ -1863,7 +1862,7 @@
       return;
     }
     if (t.hasAttribute('data-unassign')) {
-      var pid2 = t.getAttribute('data-unassign'), nm = IX.personasById[pid2].name;
+      var pid2 = t.getAttribute('data-unassign'), nm = IX.personasById[pid2].pal_name;
       IX.personasById[pid2].client_id = null; render(); toast(nm + ' returned to the unassigned pool');
       return;
     }

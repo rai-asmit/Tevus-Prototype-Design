@@ -1,9 +1,9 @@
 [
-  { "id": "grd_sal1", "persona_id": "per_sales",     "rule": "Never offer a discount above 20%.",              "action": "refuse" },
-  { "id": "grd_sal2", "persona_id": "per_sales",     "rule": "Do not quote pricing for 50+ seat deals.",       "action": "handoff" },
-  { "id": "grd_sup1", "persona_id": "per_support",   "rule": "Do not issue refunds without an order ID.",      "action": "refuse" },
-  { "id": "grd_bug1", "persona_id": "per_bugtriage", "rule": "Never promise a fix date.",                      "action": "deflect" },
-  { "id": "grd_trp1", "persona_id": "per_tripdesk",  "rule": "Do not give legal or immigration advice.",       "action": "disclaim" },
-  { "id": "grd_faq1", "persona_id": "per_faq",       "rule": "Keep every answer under three sentences.",       "action": "constrain" },
-  { "id": "grd_con1", "persona_id": "per_concierge", "rule": "Do not take payment card details in chat.",      "action": "refuse" }
+  { "id": "grd_sal1", "persona_id": "p_9x8y7z6",     "rule": "Never offer a discount above 20%.",              "action": "refuse" },
+  { "id": "grd_sal2", "persona_id": "p_9x8y7z6",     "rule": "Do not quote pricing for 50+ seat deals.",       "action": "handoff" },
+  { "id": "grd_sup1", "persona_id": "p_5d6e7f8",   "rule": "Do not issue refunds without an order ID.",      "action": "refuse" },
+  { "id": "grd_bug1", "persona_id": "p_a1b2c3d", "rule": "Never promise a fix date.",                      "action": "deflect" },
+  { "id": "grd_trp1", "persona_id": "p_e4f5g6h",  "rule": "Do not give legal or immigration advice.",       "action": "disclaim" },
+  { "id": "grd_faq1", "persona_id": "p_1a2b3c4",       "rule": "Keep every answer under three sentences.",       "action": "constrain" },
+  { "id": "grd_con1", "persona_id": "p_j3k4l5m", "rule": "Do not take payment card details in chat.",      "action": "refuse" }
 ]
